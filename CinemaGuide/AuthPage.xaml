@@ -52,7 +52,8 @@
                         <Canvas Width="150" Height="150" Grid.Row="0">
                             <Ellipse Fill="{Binding Color}" Height="150" Width="150"/>
                         </Canvas>
-                        <TextBlock Text="{Binding FirstCharacterOfLogin}" FontSize="60"/>
+                        <TextBlock Text="{Binding FirstCharacterOfLogin}" FontSize="60" Width="150"
+                                   TextAlignment="Center" VerticalAlignment="Center" Foreground="Black"/>
                         <TextBlock Text="{Binding Login}" FontSize="30" Canvas.Bottom="0" 
                Width="150" TextAlignment="Center" Grid.Row="1"
                Foreground="White" TextWrapping="Wrap"/>
@@ -63,11 +64,10 @@
 
             <ListView.ItemsSource>
                 <CompositeCollection>
-                    <local:CircleItem Color="Red" Login="Роман"/>
-                    <local:CircleItem Color="Black" Login="Александр"/>
-                    <local:CircleItem Color="Purple" Login="Дмитрий"/>
-                    <local:CircleItem Color="Pink" Login="Герман"/>
-                    <local:CircleItem Color="WhiteSmoke" Login="Евгений"/>
+                    <local:CircleItem Login="Дмитрий"/>
+                    <local:CircleItem Login="Герман"/>
+                    <local:CircleItem Login="Евгений"/>
+                    <local:CircleItem Login="Создать"/>
 
                 </CompositeCollection>
             </ListView.ItemsSource>
