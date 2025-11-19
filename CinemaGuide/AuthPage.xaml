@@ -53,7 +53,7 @@
                             <Ellipse Fill="{Binding Color}" Height="150" Width="150"/>
                         </Canvas>
                         <TextBlock Text="{Binding FirstCharacterOfLogin}" FontSize="60" Width="150"
-                                   TextAlignment="Center" VerticalAlignment="Center" Foreground="Black"/>
+                                   TextAlignment="Center" VerticalAlignment="Center" Foreground="Black" Margin="{Binding TextMargin}"/>
                         <TextBlock Text="{Binding Login}" FontSize="30" Canvas.Bottom="0" 
                Width="150" TextAlignment="Center" Grid.Row="1"
                Foreground="White" TextWrapping="Wrap"/>
@@ -67,11 +67,45 @@
                     <local:CircleItem Login="Дмитрий"/>
                     <local:CircleItem Login="Герман"/>
                     <local:CircleItem Login="Евгений"/>
-                    <local:CircleItem Login="Создать"/>
+                    <local:CreateAccountItem/>
 
                 </CompositeCollection>
             </ListView.ItemsSource>
-            
+
+            <ListView.ItemContainerStyle>
+                <Style TargetType="ListViewItem">
+                    <Setter Property="Background" Value="Transparent"/>
+                    <Setter Property="BorderBrush" Value="Transparent"/>
+                    <Setter Property="BorderThickness" Value="0"/>
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="ListViewItem">
+                                <Border x:Name="Bd"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="0"
+                            Padding="{TemplateBinding Padding}">
+                                    <ContentPresenter/>
+                                </Border>
+                                <ControlTemplate.Triggers>
+                                    <Trigger Property="IsSelected" Value="True">
+                                        <Setter TargetName="Bd" Property="Background" Value="Transparent"/>
+                                        <Setter TargetName="Bd" Property="BorderBrush" Value="DarkBlue"/>
+                                        <Setter TargetName="Bd" Property="BorderThickness" Value="1"/>
+                                        <Setter TargetName="Bd" Property="CornerRadius" Value="10"/>
+                                    </Trigger>
+                                    <Trigger Property="IsMouseOver" Value="True">
+                                        <Setter TargetName="Bd" Property="Background" Value="DarkBlue"/>
+                                        <Setter TargetName="Bd" Property="CornerRadius" Value="10"/>
+                                    </Trigger>
+                                </ControlTemplate.Triggers>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                </Style>
+            </ListView.ItemContainerStyle>
+
         </ListView>
 
     </Grid>
