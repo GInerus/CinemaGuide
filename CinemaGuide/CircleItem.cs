@@ -1,22 +1,24 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.IO;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 
+
 namespace CinemaGuide
 {
     public class CircleItem
     {
         // Предположим, что это свойство будет заполняться из БД
-        //public string ImagePath { get; set; }
-        public string ImagePath = "C:\\Users\\germa\\OneDrive\\Изображения\\Ава\\Xeno-.jpg";
+        public string ImagePath { get; set; }
         public String Login { get; set; }
-        public String FirstCharacterOfLogin 
-            => !string.IsNullOrEmpty(Login) ? Login[0].ToString() : "";
+        public bool HasValidImage => !string.IsNullOrEmpty(ImagePath) && File.Exists(ImagePath);
+        public String FirstCharacterOfLogin
+            => !HasValidImage ? (string.IsNullOrEmpty(Login) ? "?" : Login[0].ToString()) : "";
 
         public Brush Color
         {
@@ -31,7 +33,7 @@ namespace CinemaGuide
                     try
                     {
                         var imageBrush = new ImageBrush();
-                        imageBrush.ImageSource = new BitmapImage(new Uri("C:\\Users\\germa\\OneDrive\\Изображения\\Ава\\Xeno-.jpg"));
+                        imageBrush.ImageSource = new BitmapImage(new Uri(ImagePath));
                         imageBrush.Stretch = Stretch.UniformToFill;
                         imageBrush.AlignmentX = AlignmentX.Center;
                         imageBrush.AlignmentY = AlignmentY.Center;

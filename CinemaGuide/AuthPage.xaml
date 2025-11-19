@@ -65,9 +65,13 @@
 
             <ListView.ItemsSource>
                 <CompositeCollection>
-                    <local:CircleItem Login="Дмитрий"/>
-                    <local:CircleItem Login="Герман"/>
-                    <local:CircleItem Login="Евгений"/>
+                    <local:CircleItem Login="Дмитрий" ImagePath="C:\\Users\\germa\\OneDrive\\Изображения\\Ава\\Dima.jpg"/>
+                    <local:CircleItem Login="Герман" ImagePath="C:\\Users\\germa\\OneDrive\\Изображения\\Ава\\Xeno-.jpg"/>
+                    <local:CircleItem Login="Евгений" ImagePath="C:\\Users\\germa\\OneDrive\\Изображения\\Ава\\Jeka.jpg"/>
+                    <local:CircleItem Login="Данила" ImagePath="C:\\Users\\germa\\OneDrive\\Изображения\\Ава\\Dany.jpg"/>
+
+
+
                     <local:CreateAccountItem/>
 
                 </CompositeCollection>
@@ -92,12 +96,12 @@
                                 <ControlTemplate.Triggers>
                                     <Trigger Property="IsSelected" Value="True">
                                         <Setter TargetName="Bd" Property="Background" Value="Transparent"/>
-                                        <Setter TargetName="Bd" Property="BorderBrush" Value="DarkBlue"/>
+                                        <Setter TargetName="Bd" Property="BorderBrush" Value="Blue"/>
                                         <Setter TargetName="Bd" Property="BorderThickness" Value="1"/>
                                         <Setter TargetName="Bd" Property="CornerRadius" Value="10"/>
                                     </Trigger>
                                     <Trigger Property="IsMouseOver" Value="True">
-                                        <Setter TargetName="Bd" Property="Background" Value="DarkBlue"/>
+                                        <Setter TargetName="Bd" Property="Background" Value="#000087"/>
                                         <Setter TargetName="Bd" Property="CornerRadius" Value="10"/>
                                     </Trigger>
                                 </ControlTemplate.Triggers>
