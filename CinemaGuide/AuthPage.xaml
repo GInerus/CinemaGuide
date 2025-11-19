@@ -33,7 +33,8 @@
         </Viewbox>
         
 
-        <ListView Background="Transparent" Grid.Row="1">
+        <ListView Background="Transparent" Grid.Row="1"  
+                  BorderBrush="Transparent">
             <ListView.ItemsPanel>
                 <ItemsPanelTemplate>
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Center"/>
@@ -51,6 +52,7 @@
                         <Canvas Width="150" Height="150" Grid.Row="0">
                             <Ellipse Fill="{Binding Color}" Height="150" Width="150"/>
                         </Canvas>
+                        <TextBlock Text="{Binding FirstCharacterOfLogin}" FontSize="60"/>
                         <TextBlock Text="{Binding Login}" FontSize="30" Canvas.Bottom="0" 
                Width="150" TextAlignment="Center" Grid.Row="1"
                Foreground="White" TextWrapping="Wrap"/>

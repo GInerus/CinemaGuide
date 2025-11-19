@@ -24,10 +24,5 @@ namespace CinemaGuide
         {
             InitializeComponent();
         }
-
-        private void Ellipse_TextInput(object sender, TextCompositionEventArgs e)
-        {
-
-        }
     }
 }

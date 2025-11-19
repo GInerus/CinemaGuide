@@ -11,5 +11,7 @@ namespace CinemaGuide
     {
         public Brush Color { get; set; }
         public String Login { get; set; }
+        public String FirstCharacterOfLogin 
+            => !string.IsNullOrEmpty(Login) ? Login[0].ToString() : "";
     }
 }
