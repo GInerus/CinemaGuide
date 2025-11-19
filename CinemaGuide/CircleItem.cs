@@ -3,17 +3,58 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Media;
+using System.Windows.Media.Imaging;
 
 namespace CinemaGuide
 {
     public class CircleItem
     {
-        public Brush Color
-            => !string.IsNullOrEmpty(Login) ? (Brush)new BrushConverter().ConvertFromString(GenerateColorFromText(Login)) : Brushes.Gray;
+        // Предположим, что это свойство будет заполняться из БД
+        //public string ImagePath { get; set; }
+        public string ImagePath = "C:\\Users\\germa\\OneDrive\\Изображения\\Ава\\Xeno-.jpg";
         public String Login { get; set; }
         public String FirstCharacterOfLogin 
             => !string.IsNullOrEmpty(Login) ? Login[0].ToString() : "";
+
+        public Brush Color
+        {
+            get
+            {
+                if (string.IsNullOrEmpty(Login))
+                    return Brushes.Gray;
+
+                // Если есть путь к изображению - используем картинку
+                if (!string.IsNullOrEmpty(ImagePath))
+                {
+                    try
+                    {
+                        var imageBrush = new ImageBrush();
+                        imageBrush.ImageSource = new BitmapImage(new Uri("C:\\Users\\germa\\OneDrive\\Изображения\\Ава\\Xeno-.jpg"));
+                        imageBrush.Stretch = Stretch.UniformToFill;
+                        imageBrush.AlignmentX = AlignmentX.Center;
+                        imageBrush.AlignmentY = AlignmentY.Center;
+                        return imageBrush;
+                    }
+                    catch
+                    {
+                        return GenerateColorFromLogin();
+                    }
+                }
+                else
+                {
+                    return GenerateColorFromLogin();
+                }    
+            }
+        }
+
+        private Brush GenerateColorFromLogin()
+        {
+            return !string.IsNullOrEmpty(Login)
+                ? (Brush)new BrushConverter().ConvertFromString(GenerateColorFromText(Login))
+                : Brushes.Gray;
+        }
 
         public static string GenerateColorFromText(string text)
         {

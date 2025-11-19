@@ -34,7 +34,7 @@
         
 
         <ListView Background="Transparent" Grid.Row="1"  
-                  BorderBrush="Transparent">
+                  BorderBrush="Transparent" ScrollViewer.CanContentScroll="False">
             <ListView.ItemsPanel>
                 <ItemsPanelTemplate>
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Center"/>
@@ -50,7 +50,8 @@
                         </Grid.RowDefinitions>
 
                         <Canvas Width="150" Height="150" Grid.Row="0">
-                            <Ellipse Fill="{Binding Color}" Height="150" Width="150"/>
+                            <Ellipse Fill="{Binding Color}" Height="150" Width="150">
+                            </Ellipse>
                         </Canvas>
                         <TextBlock Text="{Binding FirstCharacterOfLogin}" FontSize="60" Width="150"
                                    TextAlignment="Center" VerticalAlignment="Center" Foreground="Black" Margin="{Binding TextMargin}"/>
