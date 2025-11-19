@@ -9,6 +9,12 @@
       Title="AuthPage">
 
     <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="20*"/>
+            <RowDefinition Height="70*"/>
+            <RowDefinition Height="10*"/>
+        </Grid.RowDefinitions>
+
         <Grid.Background>
             <LinearGradientBrush StartPoint="0.5,0" EndPoint="0.5,1">
                 <GradientStop Color="Blue" Offset="1.7" />
@@ -16,87 +22,55 @@
             </LinearGradientBrush>
         </Grid.Background>
 
-        <!-- Контейнер для профилей -->
-        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+        <Viewbox Margin="0,0,0,10">
+            <TextBlock Grid.Row="0"
+                  Text="Выберите профиль" 
+                  Foreground="White" 
+                  FontSize="50" 
+                  FontWeight="Bold" 
+                  HorizontalAlignment="Center" 
+                  Margin="0,10,0,0"/>
+        </Viewbox>
+        
 
-            <!-- Заголовок -->
-            <TextBlock Text="Выберите профиль" 
-                      Foreground="White" 
-                      FontSize="50" 
-                      FontWeight="Bold" 
-                      HorizontalAlignment="Center" 
-                      Margin="0,0,0,80"/>
+        <ListView Background="Transparent" Grid.Row="1">
+            <ListView.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center"/>
+                </ItemsPanelTemplate>
+            </ListView.ItemsPanel>
 
-            <!-- Горизонтальная панель с кружками -->
-            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <Grid Height="250">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="150"/>
+                            <RowDefinition/>
+                        </Grid.RowDefinitions>
 
-                <!-- Первый профиль - Роман -->
-                <StackPanel Margin="20" HorizontalAlignment="Center">
-                    <Ellipse Width="80" Height="80" Fill="#FF2196F3" Stroke="White" StrokeThickness="2">
-                        <Ellipse.Effect>
-                            <DropShadowEffect BlurRadius="10" Opacity="0.5"/>
-                        </Ellipse.Effect>
-                    </Ellipse>
-                    <TextBlock Text="Р" 
-                           Foreground="White" 
-                           FontSize="70" 
-                           FontWeight="Bold" 
-                           HorizontalAlignment="Center" 
-                           VerticalAlignment="Center"
-                           Margin="0,-90,0,0"/>
-                    <TextBlock Text="Роман" 
-                              Foreground="White" 
-                              FontSize="14" 
-                              HorizontalAlignment="Center" 
-                              Margin="0,10,0,0"/>
-                </StackPanel>
+                        <Canvas Width="150" Height="150" Grid.Row="0">
+                            <Ellipse Fill="{Binding Color}" Height="150" Width="150"/>
+                        </Canvas>
+                        <TextBlock Text="{Binding Login}" FontSize="30" Canvas.Bottom="0" 
+               Width="150" TextAlignment="Center" Grid.Row="1"
+               Foreground="White" TextWrapping="Wrap"/>
+                    </Grid>
+                    
+                </DataTemplate>
+            </ListView.ItemTemplate>
 
-                <!-- Второй профиль - Гриша -->
-                <StackPanel Margin="20" HorizontalAlignment="Center">
-                    <Ellipse Width="80" Height="80" Fill="#FF4CAF50" Stroke="White" StrokeThickness="2">
-                        <Ellipse.Effect>
-                            <DropShadowEffect BlurRadius="10" Opacity="0.5"/>
-                        </Ellipse.Effect>
-                    </Ellipse>
-                    <TextBlock Text="Г" 
-                              Foreground="White" 
-                              FontSize="70" 
-                              FontWeight="Bold" 
-                              HorizontalAlignment="Center" 
-                              VerticalAlignment="Center"
-                              Margin="0,-90,0,0"/>
-                    <TextBlock Text="Гриша" 
-                              Foreground="White" 
-                              FontSize="14" 
-                              HorizontalAlignment="Center" 
-                              Margin="0,10,0,0"/>
-                </StackPanel>
+            <ListView.ItemsSource>
+                <CompositeCollection>
+                    <local:CircleItem Color="Red" Login="Роман"/>
+                    <local:CircleItem Color="Black" Login="Александр"/>
+                    <local:CircleItem Color="Purple" Login="Дмитрий"/>
+                    <local:CircleItem Color="Pink" Login="Герман"/>
+                    <local:CircleItem Color="WhiteSmoke" Login="Евгений"/>
 
-                <!-- Кнопка регистрации -->
-                <StackPanel Margin="20" HorizontalAlignment="Center">
-                    <Ellipse Width="80" Height="80" Fill="#FFFF5722" Stroke="White" StrokeThickness="2">
-                        <Ellipse.Effect>
-                            <DropShadowEffect BlurRadius="10" Opacity="0.5"/>
-                        </Ellipse.Effect>
-                    </Ellipse>
-                    <TextBlock Text="+" 
-                              Foreground="White" 
-                              FontSize="80" 
-                              FontWeight="Bold" 
-                              HorizontalAlignment="Center"
-                              Margin="0,-105,0,0"/>
-                    <TextBlock Text="Зарегистрироваться" 
-                              Foreground="White" 
-                              FontSize="14" 
-                              HorizontalAlignment="Center" 
-                              Margin="0,10,0,0"
-                              TextWrapping="Wrap"
-                              Width="100"
-                              TextAlignment="Center"/>
-                </StackPanel>
-
-            </StackPanel>
-        </StackPanel>
+                </CompositeCollection>
+            </ListView.ItemsSource>
+            
+        </ListView>
 
     </Grid>
     
