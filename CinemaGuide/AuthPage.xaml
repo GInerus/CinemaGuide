@@ -15,5 +15,89 @@
                 <GradientStop Color="Black" Offset="0" />
             </LinearGradientBrush>
         </Grid.Background>
+
+        <!-- Контейнер для профилей -->
+        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+
+            <!-- Заголовок -->
+            <TextBlock Text="Выберите профиль" 
+                      Foreground="White" 
+                      FontSize="50" 
+                      FontWeight="Bold" 
+                      HorizontalAlignment="Center" 
+                      Margin="0,0,0,80"/>
+
+            <!-- Горизонтальная панель с кружками -->
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+
+                <!-- Первый профиль - Роман -->
+                <StackPanel Margin="20" HorizontalAlignment="Center">
+                    <Ellipse Width="80" Height="80" Fill="#FF2196F3" Stroke="White" StrokeThickness="2">
+                        <Ellipse.Effect>
+                            <DropShadowEffect BlurRadius="10" Opacity="0.5"/>
+                        </Ellipse.Effect>
+                    </Ellipse>
+                    <TextBlock Text="Р" 
+                           Foreground="White" 
+                           FontSize="70" 
+                           FontWeight="Bold" 
+                           HorizontalAlignment="Center" 
+                           VerticalAlignment="Center"
+                           Margin="0,-90,0,0"/>
+                    <TextBlock Text="Роман" 
+                              Foreground="White" 
+                              FontSize="14" 
+                              HorizontalAlignment="Center" 
+                              Margin="0,10,0,0"/>
+                </StackPanel>
+
+                <!-- Второй профиль - Гриша -->
+                <StackPanel Margin="20" HorizontalAlignment="Center">
+                    <Ellipse Width="80" Height="80" Fill="#FF4CAF50" Stroke="White" StrokeThickness="2">
+                        <Ellipse.Effect>
+                            <DropShadowEffect BlurRadius="10" Opacity="0.5"/>
+                        </Ellipse.Effect>
+                    </Ellipse>
+                    <TextBlock Text="Г" 
+                              Foreground="White" 
+                              FontSize="70" 
+                              FontWeight="Bold" 
+                              HorizontalAlignment="Center" 
+                              VerticalAlignment="Center"
+                              Margin="0,-90,0,0"/>
+                    <TextBlock Text="Гриша" 
+                              Foreground="White" 
+                              FontSize="14" 
+                              HorizontalAlignment="Center" 
+                              Margin="0,10,0,0"/>
+                </StackPanel>
+
+                <!-- Кнопка регистрации -->
+                <StackPanel Margin="20" HorizontalAlignment="Center">
+                    <Ellipse Width="80" Height="80" Fill="#FFFF5722" Stroke="White" StrokeThickness="2">
+                        <Ellipse.Effect>
+                            <DropShadowEffect BlurRadius="10" Opacity="0.5"/>
+                        </Ellipse.Effect>
+                    </Ellipse>
+                    <TextBlock Text="+" 
+                              Foreground="White" 
+                              FontSize="80" 
+                              FontWeight="Bold" 
+                              HorizontalAlignment="Center"
+                              Margin="0,-105,0,0"/>
+                    <TextBlock Text="Зарегистрироваться" 
+                              Foreground="White" 
+                              FontSize="14" 
+                              HorizontalAlignment="Center" 
+                              Margin="0,10,0,0"
+                              TextWrapping="Wrap"
+                              Width="100"
+                              TextAlignment="Center"/>
+                </StackPanel>
+
+            </StackPanel>
+        </StackPanel>
+
     </Grid>
+    
 </Page>
