@@ -36,7 +36,7 @@
         </DataTemplate>
 
         <!-- DataTemplate для CreateAccountItem -->
-        <DataTemplate DataType="{x:Type models:CreateAccountItem}">
+        <DataTemplate DataType="{x:Type vm:CreateAccountItem}">
             <Grid Height="250">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="150"/>

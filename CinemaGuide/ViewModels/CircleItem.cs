@@ -9,16 +9,16 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 
 
-namespace CinemaGuide.Models
+namespace CinemaGuide.ViewModels
 {
     public class CircleItem
     {
         // Предположим, что это свойство будет заполняться из БД
         public string ImagePath { get; set; }
-        public String Login { get; set; }
+        public string Login { get; set; }
         public bool HasValidImage => !string.IsNullOrEmpty(ImagePath) && File.Exists(ImagePath);
-        public String FirstCharacterOfLogin
-            => !HasValidImage ? (string.IsNullOrEmpty(Login) ? "?" : Login[0].ToString()) : "";
+        public string FirstCharacterOfLogin
+            => !HasValidImage ? string.IsNullOrEmpty(Login) ? "?" : Login[0].ToString() : "";
 
         public Brush Color
         {
@@ -84,5 +84,13 @@ namespace CinemaGuide.Models
 
             return colorPalette[index];
         }
+    }
+
+    public class CreateAccountItem
+    {
+        public Brush Color => Brushes.White;  // Стандартный серый цвет
+        public string Login => "Создать";
+        public string FirstCharacterOfLogin => "+";  // Плюсик вместо буквы
+        public Thickness TextMargin => new Thickness(0, 0, 0, 10); // Смещение для плюса
     }
 }
