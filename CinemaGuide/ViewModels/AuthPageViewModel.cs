@@ -15,9 +15,10 @@ namespace CinemaGuide.ViewModels
                 new CircleItemViewModel(new CircleItem { Login = "Герман", ImagePath = @"C:\Users\germa\OneDrive\Изображения\Ава\Xeno-.jpg" }),
                 new CircleItemViewModel(new CircleItem { Login = "Евгений", ImagePath = @"C:\Users\germa\OneDrive\Изображения\Ава\Jeka.jpg" }),
                 new CircleItemViewModel(new CircleItem { Login = "Данила", ImagePath = @"C:\Users\germa\OneDrive\Изображения\Ава\Dany.jpg" }),
-                new CircleItemViewModel(new CircleItem { Login = "Ух" }),
+                new CircleItemViewModel(new CircleItem { Login = "Без лого" }),
+                new CircleItemViewModel(new CircleItem { Login = "Головань" }),
                 
-                // Добавляем "плюсик" для создания аккаунта
+                // Добавляем "+" для создания аккаунта
                 new CreateAccountItem()
             };
         }
