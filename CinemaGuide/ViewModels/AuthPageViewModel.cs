@@ -1,5 +1,8 @@
-﻿using System.Collections.ObjectModel;
+﻿using CinemaGuide.Data;
+using System.Linq;
 using CinemaGuide.Models;
+using System.Collections.ObjectModel;
+using System.IO;
 
 namespace CinemaGuide.ViewModels
 {
@@ -9,18 +12,38 @@ namespace CinemaGuide.ViewModels
 
         public AuthPageViewModel()
         {
-            Circles = new ObservableCollection<object>
+            Circles = new ObservableCollection<object>();
+            LoadUsersFromDatabase();
+        }
+
+        private void LoadUsersFromDatabase()
+        {
+            using (var db = new AppDbContext())
             {
-                new CircleItemViewModel(new CircleItem { Login = "Дмитрий", ImagePath = @"C:\Users\germa\OneDrive\Изображения\Ава\Dima.jpg" }),
-                new CircleItemViewModel(new CircleItem { Login = "Герман", ImagePath = @"C:\Users\germa\OneDrive\Изображения\Ава\Xeno-.jpg" }),
-                new CircleItemViewModel(new CircleItem { Login = "Евгений", ImagePath = @"C:\Users\germa\OneDrive\Изображения\Ава\Jeka.jpg" }),
-                new CircleItemViewModel(new CircleItem { Login = "Данила", ImagePath = @"C:\Users\germa\OneDrive\Изображения\Ава\Dany.jpg" }),
-                new CircleItemViewModel(new CircleItem { Login = "Без лого" }),
-                new CircleItemViewModel(new CircleItem { Login = "Головань" }),
-                
-                // Добавляем "+" для создания аккаунта
-                new CreateAccountItem()
-            };
+                var users = db.Users.ToList();
+
+                string baseDir = AppDomain.CurrentDomain.BaseDirectory;
+
+                foreach (var user in users)
+                {
+                    // Строим абсолютный путь
+                    string imagePath = Path.Combine(baseDir, "avatars", user.AvatarPath ?? "");
+
+                    // Добавляем в список
+                    Circles.Add(
+                        new CircleItemViewModel(
+                            new CircleItem
+                            {
+                                Login = user.Username,
+                                ImagePath = imagePath
+                            }
+                        )
+                    );
+                }
+
+                // Добавляем элемент "+"
+                Circles.Add(new CreateAccountItem());
+            }
         }
     }
 }
