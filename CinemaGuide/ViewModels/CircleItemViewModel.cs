@@ -1,11 +1,14 @@
-﻿using System;
+﻿using CinemaGuide.Helpers;
+using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
-using System.IO;
 using System.Threading.Tasks;
+using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+
 
 
 namespace CinemaGuide.ViewModels
@@ -17,6 +20,12 @@ namespace CinemaGuide.ViewModels
         public CircleItemViewModel(CircleItem item)
         {
             Item = item;
+
+            // Инициализация команды
+            ClickCommand = new RelayCommand(_ =>
+            {
+                System.Windows.MessageBox.Show($"Вы нажали на {Login}");
+            });
         }
 
         public string Login => Item.Login;
@@ -59,6 +68,9 @@ namespace CinemaGuide.ViewModels
 
             return (Color)ColorConverter.ConvertFromString(hex);
         }
+
+        // Команда для клика
+        public ICommand ClickCommand { get; }
     }
 
 }
