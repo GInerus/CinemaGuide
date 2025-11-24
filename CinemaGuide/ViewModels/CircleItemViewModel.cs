@@ -1,15 +1,11 @@
 ﻿using CinemaGuide.Helpers;
+using CinemaGuide.Views.UserControls;
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-
-
 
 namespace CinemaGuide.ViewModels
 {
@@ -20,12 +16,7 @@ namespace CinemaGuide.ViewModels
         public CircleItemViewModel(CircleItem item)
         {
             Item = item;
-
-            // Инициализация команды
-            ClickCommand = new RelayCommand(_ =>
-            {
-                System.Windows.MessageBox.Show($"Вы нажали на {Login}");
-            });
+            ClickCommand = new RelayCommand(OnClick); // <--- публичная команда
         }
 
         public string Login => Item.Login;
@@ -57,11 +48,11 @@ namespace CinemaGuide.ViewModels
         {
             string[] colors =
             {
-            "#FF0000","#FF8000","#FFFF00",
-            "#80FF00","#00FF00","#00FF80",
-            "#00FFFF","#0080FF","#0000FF",
-            "#8000FF","#FF00FF","#FF0080"
-        };
+                "#FF0000","#FF8000","#FFFF00",
+                "#80FF00","#00FF00","#00FF80",
+                "#00FFFF","#0080FF","#0000FF",
+                "#8000FF","#FF00FF","#FF0080"
+            };
 
             int hash = Math.Abs(login.GetHashCode());
             string hex = colors[hash % colors.Length];
@@ -69,8 +60,14 @@ namespace CinemaGuide.ViewModels
             return (Color)ColorConverter.ConvertFromString(hex);
         }
 
-        // Команда для клика
-        public ICommand ClickCommand { get; }
-    }
+        // Публичная команда для клика по аватару
+        public RelayCommand ClickCommand { get; }
 
+        private void OnClick(object obj)
+        {
+            var loginPasswordVM = new LoginPasswordViewModel(Item.Login);
+            ((MainWindow)Application.Current.MainWindow).MainContent.Content =
+                new LoginPasswordControl { DataContext = loginPasswordVM };
+        }
+    }
 }

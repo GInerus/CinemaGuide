@@ -16,16 +16,14 @@ namespace CinemaGuide.ViewModels
             set { currentView = value; OnPropertyChanged(); }
         }
 
-        public RelayCommand GoToAuthCommand { get; }
-
         public MainWindowViewModel()
         {
-            GoToAuthCommand = new RelayCommand(o =>
-            {
-                CurrentView = new AuthPageViewModel();
-            });
+            CurrentView = new AuthPageViewModel(); // стартовый экран
+        }
 
-            CurrentView = new AuthPageViewModel(); // при старте
+        public void GoToLoginPassword(string login)
+        {
+            CurrentView = new LoginPasswordViewModel(login);
         }
     }
 

@@ -1,4 +1,5 @@
 ﻿using CinemaGuide.ViewModels;
+using CinemaGuide.Views.UserControls;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
@@ -20,7 +21,7 @@ namespace CinemaGuide
         public MainWindow()
         {
             InitializeComponent();
-            this.DataContext = new MainWindowViewModel();
+            MainContent.Content = new AuthUserControl();
         }
     }
 }
