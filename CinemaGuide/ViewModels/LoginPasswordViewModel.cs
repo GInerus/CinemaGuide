@@ -3,6 +3,8 @@ using CinemaGuide.Helpers;
 using System.Linq;
 using System.Windows;
 using System.Windows.Input;
+using System.Windows.Media;
+using System.IO;
 
 namespace CinemaGuide.ViewModels
 {
@@ -13,6 +15,13 @@ namespace CinemaGuide.ViewModels
         {
             get => _selectedLogin;
             set { _selectedLogin = value; OnPropertyChanged(); }
+        }
+
+        private ImageSource _userAvatar;
+        public ImageSource UserAvatar
+        {
+            get => _userAvatar;
+            set { _userAvatar = value; OnPropertyChanged(); }
         }
 
         private string _password;
@@ -27,7 +36,25 @@ namespace CinemaGuide.ViewModels
         public LoginPasswordViewModel(string login)
         {
             SelectedLogin = login;
+            LoadAvatar(login);
+
             LoginCommand = new RelayCommand(ExecuteLogin, CanExecuteLogin);
+        }
+
+        private void LoadAvatar(string login)
+        {
+            using var db = new AppDbContext();
+            var user = db.Users.FirstOrDefault(u => u.Username == login);
+
+            string? imagePath = null;
+
+            if (user != null && !string.IsNullOrEmpty(user.AvatarPath))
+            {
+                string baseDir = AppDomain.CurrentDomain.BaseDirectory;
+                imagePath = Path.Combine(baseDir, "avatars", user.AvatarPath);
+            }
+
+            UserAvatar = AvatarProvider.GetAvatar(imagePath, login);
         }
 
         private bool CanExecuteLogin(object parameter)
@@ -45,14 +72,8 @@ namespace CinemaGuide.ViewModels
                 string inputHash = PasswordHasher.HashPassword(Password);
                 string dbHash = user.PasswordHash;
 
-                MessageBox.Show($"Введенный пароль: {Password}\n" +
-                              $"Хеш введенного пароля: {inputHash}\n" +
-                              $"Хеш из БД: {dbHash}\n" +
-                              $"Совпадение: {inputHash == dbHash}");
-
                 if (inputHash == dbHash)
                 {
-                    // Пароль верный - выполняем вход
                     MessageBox.Show("Успешный вход!");
                 }
                 else
