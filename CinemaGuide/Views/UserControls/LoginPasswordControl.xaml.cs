@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CinemaGuide.ViewModels;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -12,6 +13,8 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using CinemaGuide.ViewModels;
+using System.Windows.Controls;
 
 namespace CinemaGuide.Views.UserControls
 {
@@ -23,14 +26,6 @@ namespace CinemaGuide.Views.UserControls
         public LoginPasswordControl()
         {
             InitializeComponent();
-        }
-
-        private void PasswordBox_PasswordChanged(object sender, System.Windows.RoutedEventArgs e)
-        {
-            if (DataContext is ViewModels.LoginPasswordViewModel vm)
-            {
-                vm.Password = ((PasswordBox)sender).Password;
-            }
         }
     }
 }
