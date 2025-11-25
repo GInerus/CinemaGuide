@@ -3,6 +3,7 @@ using CinemaGuide.Helpers;
 using System.Windows;
 using System.Windows.Input;
 using System.IO;
+using CinemaGuide.Views.UserControls;
 
 namespace CinemaGuide.ViewModels
 {
@@ -25,14 +26,14 @@ namespace CinemaGuide.ViewModels
         public LoginPasswordViewModel(string login)
         {
             // Тут загрузка даных
-            MessageBox.Show("Нажата");
-
-
+            LoginText = login; 
             LoginCommand = new RelayCommand(ExecuteLogin, CanExecuteLogin);
+            BackCommand = new RelayCommand(BackToLast);
         }
 
-
+        public string LoginText { get; set; }
         public ICommand LoginCommand { get; }
+        public ICommand BackCommand { get; }
 
         private void ExecuteLogin(object parameter) 
         {
@@ -42,6 +43,11 @@ namespace CinemaGuide.ViewModels
         {
             return true;
             //return !string.IsNullOrEmpty(Password);
+        }
+        private void BackToLast(object parameter)
+        {
+            ((MainWindow)Application.Current.MainWindow).MainContent.Content =
+                new AuthUserControl();
         }
     }
 }
