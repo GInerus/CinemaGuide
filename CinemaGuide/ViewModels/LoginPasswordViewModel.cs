@@ -1,19 +1,42 @@
 ﻿using CinemaGuide.Data;
 using CinemaGuide.Helpers;
+using CinemaGuide.Views.UserControls;
+using System.IO;
+using System.Linq;
 using System.Windows;
 using System.Windows.Input;
-using System.IO;
-using CinemaGuide.Views.UserControls;
+using System.Windows.Media;
 
 namespace CinemaGuide.ViewModels
 {
     public class LoginPasswordViewModel : BaseViewModel
     {
+        private CircleItem _circleItem;
+        public CircleItem CircleItem
+        {
+            get => _circleItem;
+            set
+            {
+                _circleItem = value;
+                OnPropertyChanged();
+                OnPropertyChanged(nameof(BackgroundBrush));
+                OnPropertyChanged(nameof(FirstCharacter)); // чтобы буква обновлялась
+            }
+        }
+
+        public Brush BackgroundBrush => CircleItem?.Color ?? Brushes.Gray;
+        public string FirstCharacter => CircleItem?.FirstCharacterOfLogin ?? "?";
+
         private string _selectedLogin;
         public string SelectedLogin
         {
             get => _selectedLogin;
-            set { _selectedLogin = value; OnPropertyChanged(); }
+            set
+            {
+                _selectedLogin = value;
+                OnPropertyChanged();
+                LoadCircleItemForLogin(_selectedLogin);
+            }
         }
 
         private string _password;
@@ -23,27 +46,57 @@ namespace CinemaGuide.ViewModels
             set { _password = value; OnPropertyChanged(); }
         }
 
-        public LoginPasswordViewModel(string login)
-        {
-            // Тут загрузка даных
-            LoginText = login; 
-            LoginCommand = new RelayCommand(ExecuteLogin, CanExecuteLogin);
-            BackCommand = new RelayCommand(BackToLast);
-        }
-
         public string LoginText { get; set; }
         public ICommand LoginCommand { get; }
         public ICommand BackCommand { get; }
 
-        private void ExecuteLogin(object parameter) 
+        public LoginPasswordViewModel(string login)
+        {
+            LoginText = login;
+            LoginCommand = new RelayCommand(ExecuteLogin, CanExecuteLogin);
+            BackCommand = new RelayCommand(BackToLast);
+
+            LoadCircleItemForLogin(login);
+        }
+
+        private void LoadCircleItemForLogin(string login)
+        {
+            if (string.IsNullOrEmpty(login))
+            {
+                CircleItem = new CircleItem { Login = "?" };
+                return;
+            }
+
+            using (var db = new AppDbContext())
+            {
+                var user = db.Users.FirstOrDefault(u => u.Username == login);
+
+                if (user != null)
+                {
+                    string baseDir = AppDomain.CurrentDomain.BaseDirectory;
+                    string imagePath = Path.Combine(baseDir, "avatars", user.AvatarPath ?? "");
+
+                    CircleItem = new CircleItem
+                    {
+                        Login = user.Username,
+                        ImagePath = File.Exists(imagePath) ? imagePath : null
+                    };
+                }
+                else
+                {
+                    // если пользователь не найден → показываем букву
+                    CircleItem = new CircleItem { Login = login };
+                }
+            }
+        }
+
+        private void ExecuteLogin(object parameter)
         {
             MessageBox.Show("Нажата кнопка");
         }
-        private bool CanExecuteLogin(object parameter)
-        {
-            return true;
-            //return !string.IsNullOrEmpty(Password);
-        }
+
+        private bool CanExecuteLogin(object parameter) => true;
+
         private void BackToLast(object parameter)
         {
             ((MainWindow)Application.Current.MainWindow).MainContent.Content =
