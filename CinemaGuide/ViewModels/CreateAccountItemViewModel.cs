@@ -3,6 +3,8 @@ using System.Windows.Input;
 using System.Windows.Media;
 using CinemaGuide.Helpers;
 using CinemaGuide.Views.UserControls;
+using System;
+using System.IO;
 
 namespace CinemaGuide.ViewModels
 {
@@ -25,9 +27,12 @@ namespace CinemaGuide.ViewModels
 
         private void OnClick(object obj)
         {
-            // Открываем окно создания аккаунта
-            ((MainWindow)Application.Current.MainWindow).MainContent.Content =
-                new CreateAccountControl();   // <-- сделаешь свой UserControl
+            var vm = new CreateAccountViewModel();
+            var control = new CreateAccountControl();
+            control.DataContext = vm;
+
+            ((MainWindow)Application.Current.MainWindow).MainContent.Content = control;
         }
+
     }
 }
