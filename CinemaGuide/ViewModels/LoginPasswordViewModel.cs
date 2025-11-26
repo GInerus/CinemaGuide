@@ -1,9 +1,11 @@
 ﻿using CinemaGuide.Data;
 using CinemaGuide.Helpers;
+using CinemaGuide.Models;
 using CinemaGuide.Views.UserControls;
 using System.IO;
 using System.Linq;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 
@@ -92,10 +94,35 @@ namespace CinemaGuide.ViewModels
 
         private void ExecuteLogin(object parameter)
         {
-            MessageBox.Show("Нажата кнопка");
+            using (var db = new AppDbContext())
+            {
+                if (parameter is PasswordBox passwordBox)
+                {
+                    string password = passwordBox.Password;
+                    var user = db.Users.FirstOrDefault(u => u.Username == LoginText);
+                    if (PasswordHasher.HashPassword(password) == user.PasswordHash)
+                    {
+                        ((MainWindow)Application.Current.MainWindow).MainContent.Content =
+                            new AuthUserControl();
+                    }
+                    else
+                    {
+                        MessageBox.Show($"Пароль неверный");
+                    }
+                }
+            }
         }
 
-        private bool CanExecuteLogin(object parameter) => true;
+
+        private bool CanExecuteLogin(object parameter)
+        {
+            if (parameter is PasswordBox passwordBox)
+            {
+                return !string.IsNullOrEmpty(passwordBox.Password);
+            }
+            return false;
+        }
+
 
         private void BackToLast(object parameter)
         {
