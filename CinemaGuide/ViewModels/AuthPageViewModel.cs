@@ -42,7 +42,7 @@ namespace CinemaGuide.ViewModels
                 }
 
                 // Добавляем элемент "+"
-                Circles.Add(new CreateAccountItem());
+                Circles.Add(new CreateAccountItemViewModel(new CreateAccountItem()));
             }
         }
     }

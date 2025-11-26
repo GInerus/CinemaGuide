@@ -44,24 +44,53 @@
         </DataTemplate>
 
         <!-- DataTemplate для CreateAccountItem -->
-        <DataTemplate DataType="{x:Type vm:CreateAccountItem}">
-            <Grid Height="250">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="150"/>
-                    <RowDefinition/>
-                </Grid.RowDefinitions>
+        <DataTemplate DataType="{x:Type vm:CreateAccountItemViewModel}">
+            <Button Command="{Binding ClickCommand}"
+            Background="Transparent"
+            BorderBrush="Transparent"
+            Padding="0">
+                <Button.Template>
+                    <ControlTemplate TargetType="Button">
+                        <ContentPresenter/>
+                    </ControlTemplate>
+                </Button.Template>
 
-                <Canvas Width="150" Height="150" Grid.Row="0">
-                    <Ellipse Fill="{Binding Color}" Height="150" Width="150"/>
-                </Canvas>
+                <Grid Height="250" Width="150">
+                    <!-- ограничим ширину, как и в CircleItem -->
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="150"/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
 
-                <TextBlock Text="{Binding FirstCharacterOfLogin}" FontSize="60" Width="150"
-                           TextAlignment="Center" VerticalAlignment="Center" Foreground="Black"/>
-                <TextBlock Text="{Binding Login}" FontSize="30" Canvas.Bottom="0" 
-                           Width="150" TextAlignment="Center" Grid.Row="1"
-                           Foreground="White" TextWrapping="Wrap"/>
-            </Grid>
+                    <!-- Элипс в верхней ячейке -->
+                    <Viewbox Grid.Row="0">
+                        <Grid Width="150" Height="150">
+                            <Ellipse Fill="{Binding Color}" Height="150" Width="150"/>
+                            <!-- Плюсик: теперь привязка Margin и центровка работает -->
+                            <TextBlock Text="{Binding FirstCharacterOfLogin}"
+                               FontSize="60"
+                               HorizontalAlignment="Center"
+                               VerticalAlignment="Center"
+                               Margin="{Binding TextMargin}"
+                               Foreground="Black"/>
+                        </Grid>
+                    </Viewbox>
+
+                    <!-- Текст "Создать" в нижней ячейке -->
+                    <TextBlock Grid.Row="1"
+                       Text="{Binding Login}"
+                       FontSize="30"
+                       HorizontalAlignment="Center"
+                       VerticalAlignment="Top"
+                       Margin="0,8,0,0"
+                       Foreground="White"
+                       TextWrapping="Wrap"
+                       TextAlignment="Center" />
+        </Grid>
+            </Button>
         </DataTemplate>
+
+
 
     </UserControl.Resources>
 

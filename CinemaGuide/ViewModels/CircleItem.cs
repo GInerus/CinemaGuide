@@ -91,6 +91,6 @@ namespace CinemaGuide.ViewModels
         public Brush Color => Brushes.White;  // Стандартный серый цвет
         public string Login => "Создать";
         public string FirstCharacterOfLogin => "+";  // Плюсик вместо буквы
-        public Thickness TextMargin => new Thickness(0, 0, 0, 10); // Смещение для плюса
+        public Thickness TextMargin => new Thickness(0,0,0,10); // Смещение для плюса
     }
 }
