@@ -5,6 +5,7 @@ namespace CinemaGuide.Helpers
 {
     public static class PasswordBoxHelper
     {
+        // Существующие свойства для привязки пароля
         public static readonly DependencyProperty BoundPasswordProperty =
             DependencyProperty.RegisterAttached("BoundPassword", typeof(string), typeof(PasswordBoxHelper),
                 new FrameworkPropertyMetadata(string.Empty, OnBoundPasswordChanged));
@@ -16,6 +17,37 @@ namespace CinemaGuide.Helpers
         private static readonly DependencyProperty UpdatingPasswordProperty =
             DependencyProperty.RegisterAttached("UpdatingPassword", typeof(bool), typeof(PasswordBoxHelper));
 
+        // НОВОЕ: Свойство для watermark текста
+        public static readonly DependencyProperty WatermarkProperty =
+            DependencyProperty.RegisterAttached("Watermark", typeof(string), typeof(PasswordBoxHelper),
+                new PropertyMetadata(null));
+
+        // НОВОЕ: Свойство для отслеживания watermark видимости
+        public static readonly DependencyProperty ShowWatermarkProperty =
+            DependencyProperty.RegisterAttached("ShowWatermark", typeof(bool), typeof(PasswordBoxHelper),
+                new PropertyMetadata(true));
+
+        public static void SetWatermark(DependencyObject dp, string value)
+        {
+            dp.SetValue(WatermarkProperty, value);
+        }
+
+        public static string GetWatermark(DependencyObject dp)
+        {
+            return (string)dp.GetValue(WatermarkProperty);
+        }
+
+        public static void SetShowWatermark(DependencyObject dp, bool value)
+        {
+            dp.SetValue(ShowWatermarkProperty, value);
+        }
+
+        public static bool GetShowWatermark(DependencyObject dp)
+        {
+            return (bool)dp.GetValue(ShowWatermarkProperty);
+        }
+
+        // Существующие методы остаются без изменений...
         public static void SetBindPassword(DependencyObject dp, bool value)
         {
             dp.SetValue(BindPasswordProperty, value);
@@ -50,14 +82,11 @@ namespace CinemaGuide.Helpers
         {
             PasswordBox box = d as PasswordBox;
 
-            // only handle this event when the property is attached to a PasswordBox
-            // and when the BindPassword attached property has been set to true
             if (d == null || !GetBindPassword(d))
             {
                 return;
             }
 
-            // avoid recursive updating by ignoring the box's changed event
             box.PasswordChanged -= HandlePasswordChanged;
 
             string newPassword = (string)e.NewValue;
@@ -67,14 +96,14 @@ namespace CinemaGuide.Helpers
                 box.Password = newPassword;
             }
 
+            // НОВОЕ: Обновляем видимость watermark
+            UpdateWatermarkVisibility(box);
+
             box.PasswordChanged += HandlePasswordChanged;
         }
 
         private static void OnBindPasswordChanged(DependencyObject dp, DependencyPropertyChangedEventArgs e)
         {
-            // when the BindPassword attached property is set on a PasswordBox,
-            // start listening to its PasswordChanged event
-
             PasswordBox box = dp as PasswordBox;
 
             if (box == null)
@@ -88,11 +117,40 @@ namespace CinemaGuide.Helpers
             if (wasBound)
             {
                 box.PasswordChanged -= HandlePasswordChanged;
+                box.GotFocus -= OnPasswordBoxGotFocus;
+                box.LostFocus -= OnPasswordBoxLostFocus;
             }
 
             if (needToBind)
             {
                 box.PasswordChanged += HandlePasswordChanged;
+                box.GotFocus += OnPasswordBoxGotFocus;
+                box.LostFocus += OnPasswordBoxLostFocus;
+
+                // НОВОЕ: Инициализируем watermark
+                UpdateWatermarkVisibility(box);
+            }
+        }
+
+        // НОВЫЕ МЕТОДЫ для обработки watermark
+        private static void OnPasswordBoxGotFocus(object sender, RoutedEventArgs e)
+        {
+            PasswordBox box = sender as PasswordBox;
+            UpdateWatermarkVisibility(box);
+        }
+
+        private static void OnPasswordBoxLostFocus(object sender, RoutedEventArgs e)
+        {
+            PasswordBox box = sender as PasswordBox;
+            UpdateWatermarkVisibility(box);
+        }
+
+        private static void UpdateWatermarkVisibility(PasswordBox box)
+        {
+            if (box != null)
+            {
+                bool shouldShowWatermark = string.IsNullOrEmpty(box.Password) && !box.IsFocused;
+                SetShowWatermark(box, shouldShowWatermark);
             }
         }
 
@@ -100,11 +158,12 @@ namespace CinemaGuide.Helpers
         {
             PasswordBox box = sender as PasswordBox;
 
-            // set a flag to indicate that we're updating the password
             SetUpdatingPassword(box, true);
-            // push the new password into the BoundPassword property
             SetBoundPassword(box, box.Password);
             SetUpdatingPassword(box, false);
+
+            // НОВОЕ: Обновляем видимость watermark при изменении пароля
+            UpdateWatermarkVisibility(box);
         }
     }
 }
