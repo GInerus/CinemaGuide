@@ -20,13 +20,18 @@
             </LinearGradientBrush>
         </Grid.Background>
 
+        <!-- CanContentScroll=False чтобы UniformGrid получал точную ширину -->
         <ScrollViewer VerticalScrollBarVisibility="Auto"
+                      CanContentScroll="False"
                       helpers:ScrollLoadBehavior.LoadNextPageCommand="{Binding LoadNextPageCommand}">
 
-            <ItemsControl ItemsSource="{Binding Movies}">
+            <ItemsControl ItemsSource="{Binding Movies}"
+                          HorizontalContentAlignment="Stretch">
+                <!-- важно для растягивания -->
                 <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>
-                        <UniformGrid Columns="{Binding RelativeSource={RelativeSource AncestorType=ScrollViewer}, Path=ActualWidth, Converter={StaticResource ColumnCountConverter}}" />
+                        <!-- Биндим Columns к ActualWidth самого ItemsControl (работает внутри шаблона) -->
+                        <UniformGrid Columns="{Binding RelativeSource={RelativeSource AncestorType=ItemsControl}, Path=ActualWidth, Converter={StaticResource ColumnCountConverter}}" />
                     </ItemsPanelTemplate>
                 </ItemsControl.ItemsPanel>
 
