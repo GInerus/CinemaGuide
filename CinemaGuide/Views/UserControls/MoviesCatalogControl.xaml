@@ -8,37 +8,45 @@
         <vm:MoviesCatalogViewModel/>
     </UserControl.DataContext>
 
-    <ScrollViewer VerticalScrollBarVisibility="Auto"
-              helpers:ScrollLoadBehavior.LoadNextPageCommand="{Binding LoadNextPageCommand}">
-        <ItemsControl ItemsSource="{Binding Movies}">
-            <ItemsControl.ItemsPanel>
-                <ItemsPanelTemplate>
-                    <WrapPanel Orientation="Horizontal"/>
-                </ItemsPanelTemplate>
-            </ItemsControl.ItemsPanel>
+    <Grid>
+        <Grid.Background>
+            <LinearGradientBrush StartPoint="0.5,0" EndPoint="0.5,1">
+                <GradientStop Color="blue" Offset="1.7" />
+                <GradientStop Color="black" Offset="0.6" />
+            </LinearGradientBrush>
+        </Grid.Background>
 
-            <ItemsControl.ItemTemplate>
-                <DataTemplate>
-                    <Border Margin="10" Padding="10" 
-                            Background="#1A1A1A" 
+        <ScrollViewer VerticalScrollBarVisibility="Auto"
+              helpers:ScrollLoadBehavior.LoadNextPageCommand="{Binding LoadNextPageCommand}">
+            <ItemsControl ItemsSource="{Binding Movies}">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <WrapPanel Orientation="Horizontal"/>
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Border Margin="10" Padding="10" 
+                            Background="#000090" 
                             CornerRadius="8">
-                        <StackPanel Width="150">
-                            <Image Source="{Binding PosterPath}" 
+                            <StackPanel Width="150">
+                                <Image Source="{Binding PosterPath}" 
                                    Height="220"
                                    Stretch="UniformToFill"
                                    Margin="0 0 0 10"/>
 
-                            <TextBlock Text="{Binding Title}" 
+                                <TextBlock Text="{Binding Title}" 
                                        Foreground="White"
                                        TextWrapping="Wrap"
                                        FontSize="16"
                                        FontWeight="SemiBold"
                                        TextAlignment="Center"/>
-                        </StackPanel>
-                    </Border>
-                </DataTemplate>
-            </ItemsControl.ItemTemplate>
-
-        </ItemsControl>
-    </ScrollViewer>
+                            </StackPanel>
+                        </Border>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </ScrollViewer>
+    </Grid>
 </UserControl>
