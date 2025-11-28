@@ -31,14 +31,15 @@
                         <Border Margin="10" Padding="10" 
                                 Background="#000090" 
                                 CornerRadius="8">
-                            <Grid Width="150" Height="280">
-                                <!-- Постер с скруглением -->
-                                <Border CornerRadius="8" ClipToBounds="True">
-                                    <Image Source="{Binding PosterPath}" 
-                                           Height="220"
-                                           Stretch="UniformToFill"
-                                           VerticalAlignment="Top"/>
+                            <Grid Width="150" Height="273">
+                                <!-- Постер с скруглением через ImageBrush -->
+                                <Border CornerRadius="8" Width="150" Height="225" 
+                                        VerticalAlignment="Top" ClipToBounds="True">
+                                    <Border.Background>
+                                        <ImageBrush ImageSource="{Binding PosterPath}" Stretch="UniformToFill"/>
+                                    </Border.Background>
                                 </Border>
+
 
                                 <!-- Рейтинг поверх постера -->
                                 <Border HorizontalAlignment="Right" VerticalAlignment="Top"
