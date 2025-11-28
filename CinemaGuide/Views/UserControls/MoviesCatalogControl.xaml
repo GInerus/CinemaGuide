@@ -2,7 +2,8 @@
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:vm="clr-namespace:CinemaGuide.ViewModels"
-             xmlns:helpers="clr-namespace:CinemaGuide.Helpers">
+             xmlns:helpers="clr-namespace:CinemaGuide.Helpers"
+             xmlns:svg="http://sharpvectors.codeplex.com/svgc/">
 
     <UserControl.Resources>
         <helpers:ColumnCountConverter x:Key="ColumnCountConverter" MinItemWidth="160"/>
@@ -13,6 +14,7 @@
     </UserControl.DataContext>
 
     <Grid>
+        <!-- Фон -->
         <Grid.Background>
             <LinearGradientBrush StartPoint="0.5,0" EndPoint="0.5,1">
                 <GradientStop Color="Blue" Offset="1.7"/>
@@ -20,26 +22,72 @@
             </LinearGradientBrush>
         </Grid.Background>
 
-        <!-- CanContentScroll=False чтобы UniformGrid получал точную ширину -->
-        <ScrollViewer VerticalScrollBarVisibility="Auto"
+        <Grid.RowDefinitions>
+            <RowDefinition Height="80"/>
+            <!-- Верхняя панель -->
+            <RowDefinition Height="*"/>
+            <!-- Контент -->
+        </Grid.RowDefinitions>
+
+
+        <!--■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■-->
+        <!--         ВЕРХНЯЯ ПАНЕЛЬ                -->
+        <!--■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■-->
+
+        <Grid Grid.Row="0" Margin="10" VerticalAlignment="Center">
+
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <!-- Назад -->
+                <ColumnDefinition Width="*"/>
+                <!-- Пустое место -->
+            </Grid.ColumnDefinitions>
+
+            <!-- Кнопка назад -->
+            <Button Width="60" Height="60"
+                    Command="{Binding BackCommand}"
+                    Background="White"
+                    BorderThickness="0"
+                    Margin="0,0,10,0"
+                    Cursor="Hand">
+                <svg:SvgViewbox Source="Resource/arrowLeft.svg" Margin="6"/>
+            </Button>
+        </Grid>
+
+
+
+        <!--■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■-->
+        <!--         ПРОКРУЧИВАЕМЫЙ КАТАЛОГ        -->
+        <!--■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■-->
+
+        <ScrollViewer Grid.Row="1"
+                      Margin="10,5,10,10"
+                      VerticalScrollBarVisibility="Auto"
                       CanContentScroll="False"
                       helpers:ScrollLoadBehavior.LoadNextPageCommand="{Binding LoadNextPageCommand}">
 
             <ItemsControl ItemsSource="{Binding Movies}"
                           HorizontalContentAlignment="Stretch">
-                <!-- важно для растягивания -->
+
                 <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>
-                        <!-- Биндим Columns к ActualWidth самого ItemsControl (работает внутри шаблона) -->
-                        <UniformGrid Columns="{Binding RelativeSource={RelativeSource AncestorType=ItemsControl}, Path=ActualWidth, Converter={StaticResource ColumnCountConverter}}" />
+                        <!-- ГЛАВНОЕ ИСПРАВЛЕНИЕ -->
+                        <UniformGrid Columns="{Binding
+                                RelativeSource={RelativeSource AncestorType=ScrollViewer},
+                                Path=ActualWidth,
+                                Converter={StaticResource ColumnCountConverter}}"/>
                     </ItemsPanelTemplate>
                 </ItemsControl.ItemsPanel>
 
+
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
+
+                        <!-- Карточка фильма -->
                         <Border Margin="5" Padding="10" Background="#000090" CornerRadius="8">
                             <Grid Width="Auto" Height="273">
-                                <!-- Постер с скруглением через ImageBrush -->
+
+                                <!-- Постер -->
                                 <Border CornerRadius="8" Height="225" VerticalAlignment="Top" ClipToBounds="True">
                                     <Border.Background>
                                         <ImageBrush ImageSource="{Binding PosterPath}" Stretch="UniformToFill"/>
@@ -48,15 +96,16 @@
 
                                 <!-- Рейтинг поверх постера -->
                                 <Border HorizontalAlignment="Right" VerticalAlignment="Top"
-                                        Background="#AA000000" CornerRadius="5" Margin="5" Padding="3">
+                                        Background="#AA000000" CornerRadius="5"
+                                        Margin="5" Padding="3">
                                     <StackPanel Orientation="Horizontal">
                                         <TextBlock Text="★" Foreground="Gold" FontSize="14" Margin="0,0,2,0"/>
                                         <TextBlock Text="{Binding KinopoiskRating}" Foreground="White" FontSize="14"/>
                                     </StackPanel>
                                 </Border>
 
-                                <!-- Название фильма снизу -->
-                                <TextBlock Text="{Binding Title}" 
+                                <!-- Название -->
+                                <TextBlock Text="{Binding Title}"
                                            Foreground="White"
                                            TextWrapping="Wrap"
                                            TextTrimming="CharacterEllipsis"
@@ -68,9 +117,13 @@
                                            MaxHeight="60"/>
                             </Grid>
                         </Border>
+
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
+
             </ItemsControl>
         </ScrollViewer>
+
     </Grid>
+
 </UserControl>
