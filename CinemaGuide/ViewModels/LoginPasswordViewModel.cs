@@ -8,6 +8,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
+using CinemaGuide.ViewModels;
 
 namespace CinemaGuide.ViewModels
 {
@@ -102,8 +103,17 @@ namespace CinemaGuide.ViewModels
                     var user = db.Users.FirstOrDefault(u => u.Username == LoginText);
                     if (PasswordHasher.HashPassword(password) == user.PasswordHash)
                     {
-                        ((MainWindow)Application.Current.MainWindow).MainContent.Content =
-                            new MoviesCatalogControl();
+                        // Создаём UserControl для каталога фильмов
+                        var catalogControl = new MoviesCatalogControl();
+                        // Получаем ViewModel и передаём пользователя
+                        if (catalogControl.DataContext is MoviesCatalogViewModel catalogVM)
+                        {
+                            catalogVM.InitializeWithUser(user);
+                        }
+                        // Вставляем UserControl в MainContent
+                        ((MainWindow)Application.Current.MainWindow).MainContent.Content = catalogControl;
+
+
                     }
                     else
                     {
