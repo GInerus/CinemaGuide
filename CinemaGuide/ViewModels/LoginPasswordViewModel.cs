@@ -103,7 +103,7 @@ namespace CinemaGuide.ViewModels
                     if (PasswordHasher.HashPassword(password) == user.PasswordHash)
                     {
                         ((MainWindow)Application.Current.MainWindow).MainContent.Content =
-                            new AuthUserControl();
+                            new MoviesCatalogControl();
                     }
                     else
                     {
