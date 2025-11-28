@@ -9,6 +9,7 @@ namespace CinemaGuide.ViewModels
     {
         public int MovieId { get; }
         public string Title { get; }
+        public double KinopoiskRating { get; }
 
         private string _posterPath;
         public string PosterPath
@@ -25,42 +26,26 @@ namespace CinemaGuide.ViewModels
         {
             MovieId = movie.MovieId;
             Title = movie.Title;
+            KinopoiskRating = movie.KinopoiskRating ?? 0; // если null, ставим 0
 
-            // Сначала пусто, картинка загрузится асинхронно
             PosterPath = "";
-
             LoadPosterAsync(movie.PosterFileName);
         }
 
         private async void LoadPosterAsync(string fileName)
         {
-            await Task.Delay(10); // даём UI время нарисовать карточку
+            await Task.Delay(10);
 
-            if (!string.IsNullOrEmpty(fileName))
-            {
-                string path = Path.Combine(
-                    AppDomain.CurrentDomain.BaseDirectory,
-                    "Posters",
-                    fileName
-                );
+            string path = Path.Combine(
+                AppDomain.CurrentDomain.BaseDirectory,
+                "Posters",
+                string.IsNullOrEmpty(fileName) ? "no_image.png" : fileName
+            );
 
-                if (File.Exists(path))
-                    PosterPath = path;
-                else
-                    PosterPath = Path.Combine(
-                        AppDomain.CurrentDomain.BaseDirectory,
-                        "Posters",
-                        "no_image.png" // заглушка при отсутствии файла
-                    );
-            }
-            else
-            {
-                PosterPath = Path.Combine(
-                    AppDomain.CurrentDomain.BaseDirectory,
-                    "Posters",
-                    "no_image.png"
-                );
-            }
+            if (!File.Exists(path))
+                path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Posters", "no_image.png");
+
+            PosterPath = path;
         }
     }
 }
