@@ -1,11 +1,18 @@
 ﻿using CinemaGuide.Data;
+using CinemaGuide.Helpers;
 using CinemaGuide.Models;
+using CinemaGuide.Views.UserControls;
 using System;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
-using CinemaGuide.Helpers;
+using System.IO;
+using System.Linq;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Media;
+using CinemaGuide.ViewModels;
 
 namespace CinemaGuide.ViewModels
 {
@@ -18,13 +25,16 @@ namespace CinemaGuide.ViewModels
         private int TotalMovies;
 
         public ICommand LoadNextPageCommand { get; }
+        public ICommand BackCommand { get; }
 
         private User _user;
         private int _userAge;
 
+
         public MoviesCatalogViewModel()
         {
             LoadNextPageCommand = new AsyncCommand(LoadNextPageAsync);
+            BackCommand = new RelayCommand(BackToLast);
         }
 
         public void InitializeWithUser(User user)
@@ -68,6 +78,12 @@ namespace CinemaGuide.ViewModels
 
             CurrentStartIndex += PageSize;
             await Task.Delay(5);
+        }
+
+        private void BackToLast(object parameter)
+        {
+            ((MainWindow)Application.Current.MainWindow).MainContent.Content =
+                new AuthUserControl();
         }
     }
 }
