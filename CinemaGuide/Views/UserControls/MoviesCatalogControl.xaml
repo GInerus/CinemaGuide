@@ -83,7 +83,7 @@
             <!-- Кнопка Профиля -->
             <Button Grid.Column="2"
                     Width="70" Height="60"
-                    Command="{Binding BackCommand}"
+                    Command="{Binding OpenProfileCommand}"
                     Style="{DynamicResource StyleButton}"
                     Background="White"
                     BorderThickness="0"

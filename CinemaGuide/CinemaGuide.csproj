@@ -19,15 +19,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="Resource">
+    <None Update="Resource\**">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Resource\arrowRight.svg">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="Resource\person.svg">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
+
   </ItemGroup>
 
 </Project>

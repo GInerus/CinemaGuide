@@ -26,6 +26,7 @@ namespace CinemaGuide.ViewModels
 
         public ICommand LoadNextPageCommand { get; }
         public ICommand BackCommand { get; }
+        public ICommand OpenProfileCommand {get; }
 
         private User _user;
         private int _userAge;
@@ -35,6 +36,7 @@ namespace CinemaGuide.ViewModels
         {
             LoadNextPageCommand = new AsyncCommand(LoadNextPageAsync);
             BackCommand = new RelayCommand(BackToLast);
+            OpenProfileCommand = new RelayCommand(OpenProfile);
         }
 
         public void InitializeWithUser(User user)
@@ -87,6 +89,12 @@ namespace CinemaGuide.ViewModels
         {
             ((MainWindow)Application.Current.MainWindow).MainContent.Content =
                 new AuthUserControl();
+        }
+
+        private void OpenProfile(object parameter)
+        {
+            ((MainWindow)Application.Current.MainWindow).MainContent.Content =
+                new UserProfileControl(_user);
         }
     }
 }
