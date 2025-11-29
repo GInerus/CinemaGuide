@@ -19,7 +19,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="Resource\arrowLeft.svg">
+    <None Update="Resource">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="Resource\arrowRight.svg">
