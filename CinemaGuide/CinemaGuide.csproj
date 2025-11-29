@@ -18,4 +18,16 @@
     <PackageReference Include="SharpVectors" Version="1.8.5" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="Resource\arrowLeft.svg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Resource\arrowRight.svg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Resource\person.svg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>

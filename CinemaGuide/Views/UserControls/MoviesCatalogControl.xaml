@@ -54,7 +54,7 @@
 
 
         <!--■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■-->
-        <!--         ВЕРХНЯЯ ПАНЕЛЬ                -->
+        <!--           ВЕРХНЯЯ ПАНЕЛЬ              -->
         <!--■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■-->
 
         <Grid Grid.Row="0" Margin="10" VerticalAlignment="Center">
@@ -64,10 +64,13 @@
                 <!-- Назад -->
                 <ColumnDefinition Width="*"/>
                 <!-- Пустое место -->
+                <ColumnDefinition Width="Auto"/>
+                <!-- Мой профиль -->
             </Grid.ColumnDefinitions>
 
             <!-- Кнопка назад -->
-            <Button Width="70" Height="60"
+            <Button Grid.Column="0"
+                    Width="70" Height="60"
                     Command="{Binding BackCommand}"
                     Style="{DynamicResource StyleButton}"
                     Background="White"
@@ -76,6 +79,20 @@
                     Cursor="Hand">
                 <svg:SvgViewbox Source="Resource/arrowLeft.svg" Margin="6"/>
             </Button>
+
+            <!-- Кнопка Профиля -->
+            <Button Grid.Column="2"
+                    Width="70" Height="60"
+                    Command="{Binding BackCommand}"
+                    Style="{DynamicResource StyleButton}"
+                    Background="White"
+                    BorderThickness="0"
+                    Margin="0,0,10,0"
+                    Cursor="Hand">
+                <svg:SvgViewbox Source="Resource/person.svg" Margin="6"/>
+            </Button>
+
+
         </Grid>
 
 
@@ -95,7 +112,6 @@
 
                 <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>
-                        <!-- ГЛАВНОЕ ИСПРАВЛЕНИЕ -->
                         <UniformGrid Columns="{Binding
                                 RelativeSource={RelativeSource AncestorType=ScrollViewer},
                                 Path=ActualWidth,
