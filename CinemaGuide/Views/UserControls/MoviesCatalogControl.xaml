@@ -7,6 +7,29 @@
 
     <UserControl.Resources>
         <helpers:ColumnCountConverter x:Key="ColumnCountConverter" MinItemWidth="160"/>
+
+        <Style x:Key="StyleButton" TargetType="Button">
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Foreground" Value="Black"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border CornerRadius="10"
+                             Background="{TemplateBinding Background}">
+                            <ContentPresenter HorizontalAlignment="Center"
+                          VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsEnabled" Value="False">
+                    <Setter Property="Background" Value="Gray"/>
+                    <Setter Property="Foreground" Value="LightGray"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
     </UserControl.Resources>
 
     <UserControl.DataContext>
@@ -44,8 +67,9 @@
             </Grid.ColumnDefinitions>
 
             <!-- Кнопка назад -->
-            <Button Width="60" Height="60"
+            <Button Width="70" Height="60"
                     Command="{Binding BackCommand}"
+                    Style="{DynamicResource StyleButton}"
                     Background="White"
                     BorderThickness="0"
                     Margin="0,0,10,0"

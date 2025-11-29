@@ -65,6 +65,9 @@ namespace CinemaGuide.ViewModels
 
         public async Task LoadNextPageAsync()
         {
+            if (CurrentStartIndex >= TotalMovies)
+                return;
+
             using var db = new AppDbContext();
             var page = db.Movies
                 .Where(m => m.AgeRating <= _userAge)
