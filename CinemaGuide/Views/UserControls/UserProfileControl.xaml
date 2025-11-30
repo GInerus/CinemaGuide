@@ -69,24 +69,44 @@
 
         <!-- Контент пользователя -->
         <StackPanel Grid.Row="1"
-                    Margin="20"
-                    VerticalAlignment="Top"
-                    HorizontalAlignment="Center"
-                    Orientation="Vertical">
+            Margin="20"
+            VerticalAlignment="Top"
+            HorizontalAlignment="Center"
+            Orientation="Vertical">
+
+            <!-- Круг с аватаром или первой буквой -->
+            <Grid Width="80" Height="80">
+                <Ellipse Fill="{Binding CircleItem.BackgroundBrush}" />
+
+                <!-- Если есть изображение, показываем его -->
+                <Image Source="{Binding CircleItem.ImagePath}" Stretch="UniformToFill" ClipToBounds="True">
+                    <Image.Clip>
+                        <EllipseGeometry Center="40,40" RadiusX="40" RadiusY="40"/>
+                    </Image.Clip>
+                </Image>
+
+                <!-- Буква по центру -->
+                <TextBlock Text="{Binding CircleItem.FirstCharacter}"
+                   Foreground="Black"
+                   FontSize="36"
+                   HorizontalAlignment="Center"
+                   VerticalAlignment="Center"/>
+            </Grid>
 
             <!-- Никнейм -->
             <TextBlock Text="{Binding User.Username}"
-                       Foreground="White"
-                       FontSize="28"
-                       FontWeight="Bold"
-                       TextAlignment="Center"/>
+               Foreground="White"
+               FontSize="28"
+               FontWeight="Bold"
+               TextAlignment="Center"/>
 
             <!-- Год рождения -->
             <TextBlock Text="{Binding User.BirthDate}"
-                       Foreground="White"
-                       FontSize="22"
-                       TextAlignment="Center"/>
+               Foreground="White"
+               FontSize="22"
+               TextAlignment="Center"/>
 
         </StackPanel>
+
     </Grid>
 </UserControl>
