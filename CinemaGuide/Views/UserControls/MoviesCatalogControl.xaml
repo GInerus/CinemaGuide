@@ -3,7 +3,11 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:vm="clr-namespace:CinemaGuide.ViewModels"
              xmlns:helpers="clr-namespace:CinemaGuide.Helpers"
-             xmlns:svg="http://sharpvectors.codeplex.com/svgc/">
+             xmlns:svg="http://sharpvectors.codeplex.com/svgc/"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
 
     <UserControl.Resources>
         <helpers:ColumnCountConverter x:Key="ColumnCountConverter" MinItemWidth="160"/>
