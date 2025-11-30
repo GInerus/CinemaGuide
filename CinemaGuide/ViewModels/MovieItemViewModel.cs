@@ -1,7 +1,10 @@
 ﻿using CinemaGuide.Models;
 using System;
+using System.Diagnostics;
 using System.IO;
 using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Media.Imaging;
 
 namespace CinemaGuide.ViewModels
 {
@@ -11,41 +14,57 @@ namespace CinemaGuide.ViewModels
         public string Title { get; }
         public double KinopoiskRating { get; }
 
-        private string _posterPath;
-        public string PosterPath
+        private BitmapImage _posterImage;
+        public BitmapImage PosterImage
         {
-            get => _posterPath;
+            get => _posterImage;
             private set
             {
-                _posterPath = value;
-                OnPropertyChanged(nameof(PosterPath));
+                _posterImage = value;
+                OnPropertyChanged(nameof(PosterImage));
             }
         }
+
+        private string PosterFileName { get; }
+
+        // Максимальная ширина постера в карточке
+        private const int PosterMaxWidth = 150;
 
         public MovieItemViewModel(Movie movie)
         {
             MovieId = movie.MovieId;
             Title = movie.Title;
-            KinopoiskRating = movie.KinopoiskRating ?? 0; // если null, ставим 0
-
-            PosterPath = "";
-            LoadPosterAsync(movie.PosterFileName);
+            KinopoiskRating = movie.KinopoiskRating ?? 0;
+            PosterFileName = string.IsNullOrEmpty(movie.PosterFileName) ? "no_image.png" : movie.PosterFileName;
         }
 
-        private async void LoadPosterAsync(string fileName)
+        public void LoadPoster()
         {
-            await Task.Delay(10);
+            try
+            {
+                string path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Posters", PosterFileName);
+                if (!File.Exists(path))
+                    path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Posters", "no_image.png");
 
-            string path = Path.Combine(
-                AppDomain.CurrentDomain.BaseDirectory,
-                "Posters",
-                string.IsNullOrEmpty(fileName) ? "no_image.png" : fileName
-            );
+                var bitmap = new BitmapImage();
+                bitmap.BeginInit();
+                bitmap.CacheOption = BitmapCacheOption.OnLoad;
+                bitmap.DecodePixelWidth = PosterMaxWidth; // уменьшаем размер постера
+                bitmap.UriSource = new Uri(path, UriKind.Absolute);
+                bitmap.EndInit();
+                bitmap.Freeze();
 
-            if (!File.Exists(path))
-                path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Posters", "no_image.png");
+                PosterImage = bitmap;
+            }
+            catch
+            {
+                PosterImage = null;
+            }
+        }
 
-            PosterPath = path;
+        public void UnloadPoster()
+        {
+            PosterImage = null;
         }
     }
 }

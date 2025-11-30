@@ -82,17 +82,24 @@ namespace CinemaGuide.ViewModels
                 Movies.Add(new MovieItemViewModel(movie));
 
             CurrentStartIndex += PageSize;
+
             await Task.Delay(5);
         }
 
         private void BackToLast(object parameter)
         {
+            foreach (var movie in Movies)
+                movie.UnloadPoster();
+
             ((MainWindow)Application.Current.MainWindow).MainContent.Content =
                 new AuthUserControl();
         }
 
         private void OpenProfile(object parameter)
         {
+            foreach (var movie in Movies)
+                movie.UnloadPoster();
+
             ((MainWindow)Application.Current.MainWindow).MainContent.Content =
                 new UserProfileControl(_user);
         }

@@ -128,20 +128,20 @@
                     <DataTemplate>
 
                         <!-- Карточка фильма -->
-                        <Border Margin="5" Padding="10" Background="#000090" CornerRadius="8">
+                        <Border Margin="5" Padding="10" Background="#000090" CornerRadius="8"
+                                helpers:PosterLoaderBehavior.EnableLazyLoad="True">
                             <Grid Width="Auto" Height="273">
-
                                 <!-- Постер -->
                                 <Border CornerRadius="8" Height="225" VerticalAlignment="Top" ClipToBounds="True">
                                     <Border.Background>
-                                        <ImageBrush ImageSource="{Binding PosterPath}" Stretch="UniformToFill"/>
+                                        <ImageBrush ImageSource="{Binding PosterImage}" Stretch="UniformToFill"/>
                                     </Border.Background>
                                 </Border>
 
                                 <!-- Рейтинг поверх постера -->
                                 <Border HorizontalAlignment="Right" VerticalAlignment="Top"
-                                        Background="#AA000000" CornerRadius="5"
-                                        Margin="5" Padding="3">
+            Background="#AA000000" CornerRadius="5"
+            Margin="5" Padding="3">
                                     <StackPanel Orientation="Horizontal">
                                         <TextBlock Text="★" Foreground="Gold" FontSize="14" Margin="0,0,2,0"/>
                                         <TextBlock Text="{Binding KinopoiskRating}" Foreground="White" FontSize="14"/>
@@ -150,16 +150,17 @@
 
                                 <!-- Название -->
                                 <TextBlock Text="{Binding Title}"
-                                           Foreground="White"
-                                           TextWrapping="Wrap"
-                                           TextTrimming="CharacterEllipsis"
-                                           FontSize="16"
-                                           FontWeight="SemiBold"
-                                           TextAlignment="Center"
-                                           Margin="0,230,0,0"
-                                           VerticalAlignment="Center"
-                                           MaxHeight="60"/>
+                                   Foreground="White"
+                                   TextWrapping="Wrap"
+                                   TextTrimming="CharacterEllipsis"
+                                   FontSize="16"
+                                   FontWeight="SemiBold"
+                                   TextAlignment="Center"
+                                   Margin="0,230,0,0"
+                                   VerticalAlignment="Center"
+                                   MaxHeight="60"/>
                             </Grid>
+
                         </Border>
 
                     </DataTemplate>
