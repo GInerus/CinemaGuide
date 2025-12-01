@@ -37,19 +37,28 @@
 
                     <!-- Постер -->
                     <Border Grid.Column="0"
-                            Width="200" Height="300"
-                            CornerRadius="12"
-                            Background="#1A1A1A"
-                            Margin="0,0,30,0"
-                            VerticalAlignment="Top"
-                            Effect="{DynamicResource ShadowEffect}">
-                        <Image Source="{Binding Poster}"
+                        Width="200"
+                        Height="300"
+                        Background="#1A1A1A"
+                        Margin="0,0,30,0"
+                        VerticalAlignment="Top">
+
+                        <Grid>
+                            <Image x:Name="PosterImage"
+                               Source="{Binding Poster}"
                                Stretch="UniformToFill"
                                SnapsToDevicePixels="True"
-                               UseLayoutRounding="True"/>
+                               UseLayoutRounding="True">
+
+                                <Image.Clip>
+                                    <RectangleGeometry RadiusX="12" RadiusY="12"
+                               Rect="0,0,200,300"/>
+                                </Image.Clip>
+                            </Image>
+                        </Grid>
                     </Border>
 
-                    <!-- Правая часть -->
+                        <!-- Правая часть -->
                     <StackPanel Grid.Column="1" Orientation="Vertical">
 
                         <Grid>
@@ -57,7 +66,7 @@
                                 <ColumnDefinition Width="*"/>
                                 <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
-                            
+
                             <!-- Блок информации -->
                             <Border Grid.Column="0"
                                 Background="#0A0A25"
@@ -169,9 +178,7 @@
                                            LineHeight="24"/>
                             </StackPanel>
                         </Border>
-
                     </StackPanel>
-
                 </Grid>
             </StackPanel>
         </ScrollViewer>
