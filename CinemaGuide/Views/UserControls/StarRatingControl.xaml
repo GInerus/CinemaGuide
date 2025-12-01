@@ -1,0 +1,36 @@
+﻿<UserControl x:Class="CinemaGuide.Views.UserControls.StarRatingControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Name="root">
+
+    <StackPanel Orientation="Horizontal" Margin="0,0,20,0">
+        <ItemsControl ItemsSource="{Binding Stars, ElementName=root}">
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <StackPanel Orientation="Horizontal"/>
+                </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <Grid Width="24" Height="24">
+
+                        <!-- Серое пустое -->
+                        <Path Data="M12 17.27L18.18 21L16.54 13.97L22 9.24L14.81 8.63L12 2L9.19 8.63L2 9.24L7.45 13.97L5.82 21L12 17.27Z"
+                              Fill="#444"/>
+
+                        <!-- Золотая часть -->
+                        <Grid>
+                            <Grid.Clip>
+                                <RectangleGeometry Rect="{Binding FillRect}"/>
+                            </Grid.Clip>
+
+                            <Path Data="M12 17.27L18.18 21L16.54 13.97L22 9.24L14.81 8.63L12 2L9.19 8.63L2 9.24L7.45 13.97L5.82 21L12 17.27Z"
+                                  Fill="#FFD700"/>
+                        </Grid>
+                    </Grid>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
+    </StackPanel>
+</UserControl>
