@@ -36,7 +36,7 @@
 
                     <!-- Постер -->
                     <Border Grid.Column="0"
-                            Width="260" Height="380"
+                            Width="200" Height="300"
                             CornerRadius="12"
                             Background="#1A1A1A"
                             Margin="0,0,30,0"
@@ -51,85 +51,94 @@
                     <!-- Правая часть -->
                     <StackPanel Grid.Column="1" Orientation="Vertical">
 
-                        <!-- Блок информации -->
-                        <Border Background="#0A0A25"
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            
+                            <!-- Блок информации -->
+                            <Border Grid.Column="0"
+                                Background="#0A0A25"
                                 CornerRadius="12"
                                 Padding="15"
-                                Margin="0,0,0,20">
-                            <StackPanel>
+                                Margin="0,0,10,20">
+                                <StackPanel>
 
-                                <TextBlock Text="Информация"
-                                           FontSize="20"
-                                           FontWeight="Bold"
-                                           Foreground="White"
-                                           Margin="0,0,0,10"/>
+                                    <TextBlock Text="Информация"
+                                       FontSize="20"
+                                       FontWeight="Bold"
+                                       Foreground="White"
+                                       Margin="0,0,0,10"/>
 
-                                <StackPanel Orientation="Horizontal" Margin="0,4">
-                                    <TextBlock Text="Длительность: " Foreground="White" FontSize="16"/>
-                                    <TextBlock Text="{Binding DurationFormatted}" Foreground="White" FontSize="16"/>
+                                    <StackPanel Orientation="Horizontal" Margin="0,4">
+                                        <TextBlock Text="Длительность: " Foreground="White" FontSize="16"/>
+                                        <TextBlock Text="{Binding DurationFormatted}" Foreground="White" FontSize="16"/>
+                                    </StackPanel>
+
+                                    <StackPanel Orientation="Horizontal" Margin="0,4">
+                                        <TextBlock Text="Год: " Foreground="White" FontSize="16"/>
+                                        <TextBlock Text="{Binding ReleaseYear}" Foreground="White" FontSize="16"/>
+                                    </StackPanel>
+
+                                    <StackPanel Orientation="Horizontal" Margin="0,4">
+                                        <TextBlock Text="Возраст: " Foreground="White" FontSize="16"/>
+                                        <TextBlock Text="{Binding AgeRating}" Foreground="White" FontSize="16"/>
+                                        <TextBlock Text="+" Foreground="White" FontSize="16"/>
+                                    </StackPanel>
+
+                                    <!-- Жанры -->
+                                    <WrapPanel Margin="0,10,0,0">
+                                        <ItemsControl ItemsSource="{Binding Genres}">
+                                            <ItemsControl.ItemsPanel>
+                                                <ItemsPanelTemplate>
+                                                    <WrapPanel/>
+                                                </ItemsPanelTemplate>
+                                            </ItemsControl.ItemsPanel>
+                                            <ItemsControl.ItemTemplate>
+                                                <DataTemplate>
+                                                    <Border Background="#333"
+                                CornerRadius="6"
+                                Padding="6,3"
+                                Margin="3">
+                                                        <TextBlock Text="{Binding}"
+                                       Foreground="White"
+                                       FontSize="14"/>
+                                                    </Border>
+                                                </DataTemplate>
+                                            </ItemsControl.ItemTemplate>
+                                        </ItemsControl>
+                                    </WrapPanel>
+
                                 </StackPanel>
+                            </Border>
 
-                                <StackPanel Orientation="Horizontal" Margin="0,4">
-                                    <TextBlock Text="Год: " Foreground="White" FontSize="16"/>
-                                    <TextBlock Text="{Binding ReleaseYear}" Foreground="White" FontSize="16"/>
-                                </StackPanel>
-
-                                <StackPanel Orientation="Horizontal" Margin="0,4">
-                                    <TextBlock Text="Возраст: " Foreground="White" FontSize="16"/>
-                                    <TextBlock Text="{Binding AgeRating}" Foreground="White" FontSize="16"/>
-                                    <TextBlock Text="+" Foreground="White" FontSize="16"/>
-                                </StackPanel>
-
-                                <!-- Жанры -->
-                                <WrapPanel Margin="0,10,0,0">
-                                    <ItemsControl ItemsSource="{Binding Genres}">
-                                        <ItemsControl.ItemsPanel>
-                                            <ItemsPanelTemplate>
-                                                <WrapPanel/>
-                                            </ItemsPanelTemplate>
-                                        </ItemsControl.ItemsPanel>
-                                        <ItemsControl.ItemTemplate>
-                                            <DataTemplate>
-                                                <Border Background="#333"
-                                                        CornerRadius="6"
-                                                        Padding="6,3"
-                                                        Margin="3">
-                                                    <TextBlock Text="{Binding}"
-                                                               Foreground="White"
-                                                               FontSize="14"/>
-                                                </Border>
-                                            </DataTemplate>
-                                        </ItemsControl.ItemTemplate>
-                                    </ItemsControl>
-                                </WrapPanel>
-
-                            </StackPanel>
-                        </Border>
-
-                        <!-- Блок рейтингов -->
-                        <Border Background="#0A0A25"
+                            <!-- Блок рейтингов -->
+                            <Border Grid.Column="1"
+                                Background="#0A0A25"
                                 CornerRadius="12"
                                 Padding="15"
-                                Margin="0,0,0,20">
-                            <StackPanel>
+                                Margin="10,0,0,20">
+                                <StackPanel>
 
-                                <TextBlock Text="Рейтинги"
-                                           FontSize="20"
-                                           FontWeight="Bold"
-                                           Foreground="White"
-                                           Margin="0,0,0,10"/>
+                                    <TextBlock Text="Рейтинги"
+                                       FontSize="20"
+                                       FontWeight="Bold"
+                                       Foreground="White"
+                                       Margin="0,0,0,10"/>
 
-                                <StackPanel Orientation="Horizontal" Margin="0,4">
-                                    <TextBlock Text="IMDB: " Foreground="White" FontSize="16"/>
-                                    <TextBlock Text="{Binding ImdbRating}" Foreground="White" FontSize="16"/>
+                                    <StackPanel Orientation="Horizontal" Margin="0,4">
+                                        <TextBlock Text="IMDB: " Foreground="White" FontSize="16"/>
+                                        <TextBlock Text="{Binding ImdbRating}" Foreground="White" FontSize="16"/>
+                                    </StackPanel>
+
+                                    <StackPanel Orientation="Horizontal" Margin="0,4">
+                                        <TextBlock Text="Кинопоиск: " Foreground="White" FontSize="16"/>
+                                        <TextBlock Text="{Binding KinopoiskRating}" Foreground="White" FontSize="16"/>
+                                    </StackPanel>
                                 </StackPanel>
-
-                                <StackPanel Orientation="Horizontal" Margin="0,4">
-                                    <TextBlock Text="Кинопоиск: " Foreground="White" FontSize="16"/>
-                                    <TextBlock Text="{Binding KinopoiskRating}" Foreground="White" FontSize="16"/>
-                                </StackPanel>
-                            </StackPanel>
-                        </Border>
+                            </Border>
+                        </Grid>
 
                         <!-- Описание -->
                         <Border Background="#0A0A25"
