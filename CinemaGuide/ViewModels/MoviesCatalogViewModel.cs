@@ -108,19 +108,28 @@ namespace CinemaGuide.ViewModels
 
         public void OpenMovie(object parameter)
         {
-            if (parameter is not Movie movie)
+            if (parameter is not int movieId)
+            {
+                MessageBox.Show("Ожидался MovieId (int)");
                 return;
+            }
 
-            //// открываем страницу фильма
-            //var moviePage = new MoviePageControl();
+            using var db = new AppDbContext();
+            var movie = db.Movies.FirstOrDefault(m => m.MovieId == movieId);
+            if (movie == null)
+            {
+                MessageBox.Show("Фильм не найден");
+                return;
+            }
+            MessageBox.Show($"{movie.MovieId}");
 
-            //if (moviePage.DataContext is MoviePageViewModel vm)
-            //    vm.Initialize(movie, CurrentUser);
+            var moviePage = new MoviePageControl();
+            moviePage.DataContext = new MoviePageViewModel(new MovieItemViewModel(movie));
 
-            //((MainWindow)Application.Current.MainWindow).MainContent.Content = moviePage;
-
-            MessageBox.Show(movie.Title);
-
+            ((MainWindow)Application.Current.MainWindow).MainContent.Content = moviePage;
         }
+
+
+
     }
 }

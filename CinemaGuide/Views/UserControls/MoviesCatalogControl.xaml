@@ -135,7 +135,7 @@
                                 <MouseBinding MouseAction="LeftClick"
                                   Command="{Binding DataContext.OpenMovieCommand,
                                                     RelativeSource={RelativeSource AncestorType=ItemsControl}}"
-                                  CommandParameter="{Binding Movie}"/>
+                                  CommandParameter="{Binding MovieId}"/>
                             </Border.InputBindings>
 
                             <Grid Width="Auto" Height="273">
