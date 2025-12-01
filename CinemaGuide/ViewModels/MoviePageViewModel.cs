@@ -28,7 +28,7 @@ namespace CinemaGuide.ViewModels
 
             // Если постер ещё не загружен
             if (MovieItem.PosterImage == null)
-                MovieItem.LoadPoster(250);
+                MovieItem.LoadPoster(200);
 
             // Дата релиза
             if (DateTime.TryParse(MovieItem.Movie.ReleaseDate, out var date))
