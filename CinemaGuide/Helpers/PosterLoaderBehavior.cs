@@ -27,7 +27,7 @@ namespace CinemaGuide.Helpers
                 fe.Loaded += (s, ev) =>
                 {
                     if (fe.DataContext is MovieItemViewModel vm)
-                        vm.LoadPoster();
+                        vm.LoadPoster(150);
                 };
 
                 fe.Unloaded += (s, ev) =>

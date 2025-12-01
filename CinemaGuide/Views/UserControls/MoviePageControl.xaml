@@ -17,80 +17,97 @@
         </Grid.Background>
 
         <ScrollViewer VerticalScrollBarVisibility="Auto">
-            <Grid Margin="30">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto"/>
-                    <!-- Постер -->
-                    <ColumnDefinition Width="*" />
-                    <!-- Остальная информация -->
-                </Grid.ColumnDefinitions>
-
-                <!-- Постер -->
-                <Border CornerRadius="10" Width="200" Height="300" ClipToBounds="True" Background="#222" Grid.Column="0">
-                    <Image Source="{Binding Poster}" Stretch="UniformToFill"/>
-                </Border>
-
-                <!-- Правая часть: информация о фильме -->
-                <StackPanel Grid.Column="1" Margin="20,0,0,0">
-                    <!-- Название -->
-                    <TextBlock Text="{Binding Title}"
-                               FontSize="28" FontWeight="Bold"
+            <Grid>
+                <!-- Название -->
+                <TextBlock Text="{Binding Title}"
+                               FontSize="35" FontWeight="Bold"
                                Foreground="White" TextWrapping="Wrap"
-                               TextAlignment="Left" Margin="0,0,0,10"/>
+                               TextAlignment="Center" Margin="30,0,0,0"/>
+                
+                <Grid Margin="30">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <!-- Постер -->
+                        <ColumnDefinition Width="*" />
+                        <!-- Остальная информация -->
+                        <ColumnDefinition Width="*" />
+                        <!-- Оценки -->
+                    </Grid.ColumnDefinitions>
 
-                    <!-- Информация -->
-                    <StackPanel Orientation="Vertical" Margin="0,0,0,20">
-                        <TextBlock Foreground="White" FontSize="18" FontWeight="Bold" Margin="0,0,0,5" Text="Информация"/>
+                    <!-- Постер -->
+                    <Border Grid.Column="0"  Width="250" Height="350" ClipToBounds="True" 
+                            Background="#222" CornerRadius="10" VerticalAlignment="Top"
+                            Margin="0,30,0,0">
+                        <Image Source="{Binding Poster}" Stretch="UniformToFill"/>
+                    </Border>
 
-                        <StackPanel Orientation="Horizontal" Margin="0,2">
-                            <TextBlock Text="Год: " Foreground="White" FontSize="16"/>
-                            <TextBlock Text="{Binding ReleaseYear}" Foreground="White" FontSize="16"/>
+                    <StackPanel Grid.Column="1" Orientation="Vertical">
+                        <StackPanel Orientation="Horizontal">
+                            <!-- Правая часть: информация о фильме -->
+                            <StackPanel Grid.Column="1" Margin="20,30,0,0" Background="#000025">
+
+                                <!-- Информация -->
+                                <StackPanel Orientation="Vertical" Margin="0,0,0,20">
+                                    <TextBlock Foreground="White" FontSize="18" FontWeight="Bold" Margin="0,0,0,5" Text="Информация"/>
+
+                                    <StackPanel Orientation="Horizontal" Margin="0,2">
+                                        <TextBlock Text="Длительность: " Foreground="White" FontSize="16"/>
+                                        <TextBlock Text="{Binding DurationFormatted}" Foreground="White" FontSize="16"/>
+                                    </StackPanel>
+
+                                    <StackPanel Orientation="Horizontal" Margin="0,2">
+                                        <TextBlock Text="Год: " Foreground="White" FontSize="16"/>
+                                        <TextBlock Text="{Binding ReleaseYear}" Foreground="White" FontSize="16"/>
+                                    </StackPanel>
+
+                                    <StackPanel Orientation="Horizontal" Margin="0,2">
+                                        <TextBlock Text="Возраст: " Foreground="White" FontSize="16"/>
+                                        <TextBlock Text="{Binding AgeRating}" Foreground="White" FontSize="16"/>
+                                        <TextBlock Text="+" Foreground="White" FontSize="16"/>
+                                    </StackPanel>
+                                </StackPanel>
+
+                                <!-- Жанры -->
+                                <ItemsControl ItemsSource="{Binding Genres}" Margin="0,0,0,20">
+                                    <ItemsControl.ItemsPanel>
+                                        <ItemsPanelTemplate>
+                                            <WrapPanel/>
+                                        </ItemsPanelTemplate>
+                                    </ItemsControl.ItemsPanel>
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <Border Background="#333" CornerRadius="6" Padding="6" Margin="3">
+                                                <TextBlock Text="{Binding}" Foreground="White" FontSize="14"/>
+                                            </Border>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                            </StackPanel>
+
+                            <!-- Оценки -->
+                            <StackPanel Grid.Column="2" Margin="20,30,0,0" Background="#000025">
+
+                                <TextBlock Foreground="White" FontSize="18" FontWeight="Bold" Margin="0,0,0,5" Text="Рейтинг"/>
+
+                                <StackPanel Orientation="Horizontal" Margin="0,2">
+                                    <TextBlock Text="IMDB: " Foreground="White" FontSize="16"/>
+                                    <TextBlock Text="{Binding ImdbRating}" Foreground="White" FontSize="16"/>
+                                </StackPanel>
+
+                                <StackPanel Orientation="Horizontal" Margin="0,2">
+                                    <TextBlock Text="Кинопоиск: " Foreground="White" FontSize="16"/>
+                                    <TextBlock Text="{Binding KinopoiskRating}" Foreground="White" FontSize="16"/>
+                                </StackPanel>
+                            </StackPanel>
                         </StackPanel>
 
-                        <StackPanel Orientation="Horizontal" Margin="0,2">
-                            <TextBlock Text="Длительность: " Foreground="White" FontSize="16"/>
-                            <TextBlock Text="{Binding DurationFormatted}" Foreground="White" FontSize="16"/>
-                        </StackPanel>
-
-                        <StackPanel Orientation="Horizontal" Margin="0,2">
-                            <TextBlock Text="Возраст: " Foreground="White" FontSize="16"/>
-                            <TextBlock Text="{Binding AgeRating}" Foreground="White" FontSize="16"/>
-                            <TextBlock Text="+" Foreground="White" FontSize="16"/>
-                        </StackPanel>
-
-                        <StackPanel Orientation="Horizontal" Margin="0,2">
-                            <TextBlock Text="IMDB: " Foreground="White" FontSize="16"/>
-                            <TextBlock Text="{Binding ImdbRating}" Foreground="White" FontSize="16"/>
-                        </StackPanel>
-
-                        <StackPanel Orientation="Horizontal" Margin="0,2">
-                            <TextBlock Text="Кинопоиск: " Foreground="White" FontSize="16"/>
-                            <TextBlock Text="{Binding KinopoiskRating}" Foreground="White" FontSize="16"/>
-                        </StackPanel>
+                        <!-- Описание -->
+                        <TextBlock Text="{Binding Description}"
+                            TextWrapping="Wrap"
+                            Foreground="White"
+                            FontSize="16"/>
                     </StackPanel>
-
-                    <!-- Жанры -->
-                    <ItemsControl ItemsSource="{Binding Genres}" Margin="0,0,0,20">
-                        <ItemsControl.ItemsPanel>
-                            <ItemsPanelTemplate>
-                                <WrapPanel/>
-                            </ItemsPanelTemplate>
-                        </ItemsControl.ItemsPanel>
-                        <ItemsControl.ItemTemplate>
-                            <DataTemplate>
-                                <Border Background="#333" CornerRadius="6" Padding="6" Margin="3">
-                                    <TextBlock Text="{Binding}" Foreground="White" FontSize="14"/>
-                                </Border>
-                            </DataTemplate>
-                        </ItemsControl.ItemTemplate>
-                    </ItemsControl>
-
-                    <!-- Описание -->
-                    <TextBlock Text="{Binding Description}"
-                               TextWrapping="Wrap"
-                               Foreground="White"
-                               FontSize="16"/>
-                </StackPanel>
+                </Grid>
             </Grid>
         </ScrollViewer>
     </Grid>
