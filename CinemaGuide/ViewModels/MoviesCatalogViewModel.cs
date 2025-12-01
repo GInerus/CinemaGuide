@@ -121,8 +121,6 @@ namespace CinemaGuide.ViewModels
                 MessageBox.Show("Фильм не найден");
                 return;
             }
-            MessageBox.Show($"{movie.MovieId}");
-
             var moviePage = new MoviePageControl();
             moviePage.DataContext = new MoviePageViewModel(new MovieItemViewModel(movie));
 

@@ -26,6 +26,10 @@ namespace CinemaGuide.ViewModels
         {
             MovieItem = movieItem ?? throw new ArgumentNullException(nameof(movieItem));
 
+            // Если постер ещё не загружен
+            if (MovieItem.PosterImage == null)
+                MovieItem.LoadPoster();
+
             // Дата релиза
             if (DateTime.TryParse(MovieItem.Movie.ReleaseDate, out var date))
                 ReleaseYear = date.Year.ToString();
@@ -40,6 +44,7 @@ namespace CinemaGuide.ViewModels
 
             LoadGenres(MovieItem.Movie.MovieId);
         }
+
 
         private void LoadGenres(int movieId)
         {
