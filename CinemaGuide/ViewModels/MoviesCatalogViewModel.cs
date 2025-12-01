@@ -27,6 +27,7 @@ namespace CinemaGuide.ViewModels
         public ICommand LoadNextPageCommand { get; }
         public ICommand BackCommand { get; }
         public ICommand OpenProfileCommand {get; }
+        public ICommand OpenMovieCommand { get; }
 
         private User _user;
         private int _userAge;
@@ -37,6 +38,7 @@ namespace CinemaGuide.ViewModels
             LoadNextPageCommand = new AsyncCommand(LoadNextPageAsync);
             BackCommand = new RelayCommand(BackToLast);
             OpenProfileCommand = new RelayCommand(OpenProfile);
+            OpenMovieCommand = new RelayCommand(OpenMovie);
         }
 
         public void InitializeWithUser(User user)
@@ -102,6 +104,23 @@ namespace CinemaGuide.ViewModels
 
             ((MainWindow)Application.Current.MainWindow).MainContent.Content =
                 new UserProfileControl(_user);
+        }
+
+        public void OpenMovie(object parameter)
+        {
+            if (parameter is not Movie movie)
+                return;
+
+            //// открываем страницу фильма
+            //var moviePage = new MoviePageControl();
+
+            //if (moviePage.DataContext is MoviePageViewModel vm)
+            //    vm.Initialize(movie, CurrentUser);
+
+            //((MainWindow)Application.Current.MainWindow).MainContent.Content = moviePage;
+
+            MessageBox.Show(movie.Title);
+
         }
     }
 }

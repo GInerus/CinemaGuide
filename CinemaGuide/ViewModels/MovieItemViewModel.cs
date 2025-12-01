@@ -26,12 +26,15 @@ namespace CinemaGuide.ViewModels
         }
 
         private string PosterFileName { get; }
+        public Movie Movie { get; }
 
         // Максимальная ширина постера в карточке
         private const int PosterMaxWidth = 150;
 
         public MovieItemViewModel(Movie movie)
         {
+            Movie = movie;
+
             MovieId = movie.MovieId;
             Title = movie.Title;
             KinopoiskRating = movie.KinopoiskRating ?? 0;
