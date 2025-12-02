@@ -4,6 +4,8 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:svg="http://sharpvectors.codeplex.com/svgc/"
+             xmlns:helpers="clr-namespace:CinemaGuide.Helpers"
+             xmlns:vm="clr-namespace:CinemaGuide.ViewModels"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              mc:Ignorable="d" 
              d:DesignHeight="600" d:DesignWidth="800">
@@ -47,7 +49,8 @@
                 Command="{Binding BackCommand}"
                 Style="{DynamicResource StyleButton}"
                 Cursor="Hand"
-                Margin="10,10,0,0">
+                Margin="10,10,0,0"
+                Panel.ZIndex="10">
                 <svg:SvgViewbox Source="Resource/arrowLeft.svg" Margin="6"/>
             </Button>
             <ScrollViewer VerticalScrollBarVisibility="Auto">

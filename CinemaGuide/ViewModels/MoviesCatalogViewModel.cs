@@ -122,7 +122,7 @@ namespace CinemaGuide.ViewModels
                 return;
             }
             var moviePage = new MoviePageControl();
-            moviePage.DataContext = new MoviePageViewModel(new MovieItemViewModel(movie));
+            moviePage.DataContext = new MoviePageViewModel(new MovieItemViewModel(movie), _user);
 
             ((MainWindow)Application.Current.MainWindow).MainContent.Content = moviePage;
         }
