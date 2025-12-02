@@ -6,6 +6,7 @@
              xmlns:svg="http://sharpvectors.codeplex.com/svgc/"
              xmlns:helpers="clr-namespace:CinemaGuide.Helpers"
              xmlns:vm="clr-namespace:CinemaGuide.ViewModels"
+             xmlns:models="clr-namespace:CinemaGuide.Models"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              mc:Ignorable="d" 
              d:DesignHeight="600" d:DesignWidth="800">
@@ -72,28 +73,40 @@
                         </Grid.ColumnDefinitions>
 
                         <!-- Постер -->
-                        <Border Grid.Column="0"
-                        Width="200"
-                        Height="300"
-                        Background="#1A1A1A"
-                        Margin="0,0,30,0"
-                        VerticalAlignment="Top">
+                        <StackPanel  Grid.Column="0" Orientation="Vertical">
+                            <Border Width="200"
+                                    Height="300"
+                                    Background="Transparent"
+                                    Margin="0,0,30,0"
+                                    VerticalAlignment="Top">
 
-                            <Grid>
-                                <Image x:Name="PosterImage"
-                               Source="{Binding Poster}"
-                               Stretch="UniformToFill"
-                               SnapsToDevicePixels="True"
-                               UseLayoutRounding="True">
+                                <Grid>
+                                    <Image x:Name="PosterImage"
+                                       Source="{Binding Poster}"
+                                       Stretch="UniformToFill"
+                                       SnapsToDevicePixels="True"
+                                       UseLayoutRounding="True">
 
-                                    <Image.Clip>
-                                        <RectangleGeometry RadiusX="12" RadiusY="12"
-                               Rect="0,0,200,300"/>
-                                    </Image.Clip>
-                                </Image>
-                            </Grid>
-                        </Border>
+                                        <Image.Clip>
+                                            <RectangleGeometry RadiusX="12" RadiusY="12"
+                                                Rect="0,0,200,300"/>
+                                        </Image.Clip>
+                                    </Image>
+                                </Grid>
+                            </Border>
+                            <ComboBox SelectedValue="{Binding CurrentStatus}" 
+                                      SelectedValuePath="Tag" 
+                                      Width="200" Margin="0,10,30,0"
+                                      HorizontalContentAlignment="Center">
 
+                                <ComboBoxItem Content="Смотрю" Tag="{x:Static models:UserMovieStatus.Watching}" />
+                                <ComboBoxItem Content="Запланировано" Tag="{x:Static models:UserMovieStatus.Planned}" />
+                                <ComboBoxItem Content="Просмотрено" Tag="{x:Static models:UserMovieStatus.Watched}" />
+                                <ComboBoxItem Content="Брошено" Tag="{x:Static models:UserMovieStatus.Dropped}" />
+                                <ComboBoxItem Content="Удалить" Tag="{x:Static models:UserMovieStatus.None}" />
+                            </ComboBox>
+                        </StackPanel>
+                        
                         <!-- Правая часть -->
                         <StackPanel Grid.Column="1" Orientation="Vertical">
 
@@ -112,10 +125,10 @@
                                     <StackPanel>
 
                                         <TextBlock Text="Информация"
-                                       FontSize="20"
-                                       FontWeight="Bold"
-                                       Foreground="White"
-                                       Margin="0,0,0,10"/>
+                                           FontSize="20"
+                                           FontWeight="Bold"
+                                           Foreground="White"
+                                           Margin="0,0,0,10"/>
 
                                         <StackPanel Orientation="Horizontal" Margin="0,4">
                                             <TextBlock Text="Длительность: " Foreground="White" FontSize="16"/>
@@ -144,9 +157,9 @@
                                                 <ItemsControl.ItemTemplate>
                                                     <DataTemplate>
                                                         <Border Background="#333"
-                                CornerRadius="6"
-                                Padding="6,3"
-                                Margin="3">
+                                                            CornerRadius="6"
+                                                            Padding="6,3"
+                                                            Margin="3">
                                                             <TextBlock Text="{Binding}"
                                        Foreground="White"
                                        FontSize="14"/>
