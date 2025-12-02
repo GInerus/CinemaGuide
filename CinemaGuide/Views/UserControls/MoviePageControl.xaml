@@ -4,6 +4,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:svg="http://sharpvectors.codeplex.com/svgc/"
+             xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
              xmlns:helpers="clr-namespace:CinemaGuide.Helpers"
              xmlns:vm="clr-namespace:CinemaGuide.ViewModels"
              xmlns:models="clr-namespace:CinemaGuide.Models"
@@ -94,17 +95,25 @@
                                     </Image>
                                 </Grid>
                             </Border>
-                            <ComboBox SelectedValue="{Binding CurrentStatus}" 
-                                      SelectedValuePath="Tag" 
-                                      Width="200" Margin="0,10,30,0"
-                                      HorizontalContentAlignment="Center">
+                            <ComboBox SelectedValue="{Binding CurrentStatus, Mode=TwoWay}" 
+                                  SelectedValuePath="Tag"
+                                  Width="200" Margin="0,10,30,0"
+                                  HorizontalContentAlignment="Center">
+                                <i:Interaction.Triggers>
+                                    <i:EventTrigger EventName="SelectionChanged">
+                                        <i:InvokeCommandAction 
+                                        Command="{Binding SetStatusCommand}" 
+                                        CommandParameter="{Binding SelectedValue, RelativeSource={RelativeSource AncestorType=ComboBox}}" />
+                                    </i:EventTrigger>
+                                </i:Interaction.Triggers>
 
                                 <ComboBoxItem Content="Смотрю" Tag="{x:Static models:UserMovieStatus.Watching}" />
                                 <ComboBoxItem Content="Запланировано" Tag="{x:Static models:UserMovieStatus.Planned}" />
                                 <ComboBoxItem Content="Просмотрено" Tag="{x:Static models:UserMovieStatus.Watched}" />
                                 <ComboBoxItem Content="Брошено" Tag="{x:Static models:UserMovieStatus.Dropped}" />
-                                <ComboBoxItem Content="Удалить" Tag="{x:Static models:UserMovieStatus.None}" />
-                            </ComboBox>
+                                <ComboBoxItem Content="Не смотрю" Tag="{x:Static models:UserMovieStatus.None}" />
+                            </ComboBox> 
+
                         </StackPanel>
                         
                         <!-- Правая часть -->
@@ -206,6 +215,15 @@
                                             </StackPanel>
                                         </StackPanel>
 
+                                        <StackPanel>
+                                            <StackPanel Margin="0,4">
+                                                <TextBlock Text="Моя оценка:" Foreground="White" FontSize="16"/>
+                                                <StackPanel Orientation="Horizontal" Margin="0,4">
+                                                    <local:StarRatingControl Rating="{Binding UserRating, Mode=TwoWay}"/>
+                                                    <TextBlock Text="{Binding UserRating}" Foreground="White" FontSize="20" Margin="10,0,0,0"/>
+                                                </StackPanel>
+                                            </StackPanel>
+                                        </StackPanel>
                                     </StackPanel>
                                 </Border>
                             </Grid>

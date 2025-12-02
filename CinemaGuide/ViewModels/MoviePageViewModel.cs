@@ -28,6 +28,20 @@ namespace CinemaGuide.ViewModels
         public ObservableCollection<string> Genres { get; private set; } = new();
         public UserMovieStatus CurrentStatus { get; set; }
         public int? CurrentRating { get; set; }
+        private double _userRating;
+        public double UserRating
+        {
+            get => _userRating;
+            set
+            {
+                if (_userRating != value)
+                {
+                    _userRating = value;
+                    OnPropertyChanged(); // уведомляем интерфейс
+                    SaveUserRating();
+                }
+            }
+        }
 
         public ICommand SetStatusCommand { get; }
         public ICommand SetRatingCommand { get; }
@@ -66,11 +80,12 @@ namespace CinemaGuide.ViewModels
         private void LoadUserMovieData()
         {
             using var db = new AppDbContext();
-            var userMovie = db.UserMovies.FirstOrDefault(um => um.UserId == User.Id && um.MovieId == MovieId);
+            var userMovie = db.UserMovies.FirstOrDefault(um => um.UserId == User.UserId && um.MovieId == MovieId);
             if (userMovie != null)
             {
                 CurrentStatus = userMovie.Status;
                 CurrentRating = userMovie.Rating;
+                UserRating = userMovie.Rating.GetValueOrDefault();
             }
         }
 
@@ -81,12 +96,12 @@ namespace CinemaGuide.ViewModels
                 CurrentStatus = status;
 
                 using var db = new AppDbContext();
-                var userMovie = db.UserMovies.FirstOrDefault(um => um.UserId == User.Id && um.MovieId == MovieId);
+                var userMovie = db.UserMovies.FirstOrDefault(um => um.UserId == User.UserId && um.MovieId == MovieId);
                 if (userMovie == null)
                 {
                     userMovie = new UserMovie
                     {
-                        UserId = User.Id,
+                        UserId = User.UserId,
                         MovieId = MovieId,
                         Status = status
                     };
@@ -107,13 +122,13 @@ namespace CinemaGuide.ViewModels
                 CurrentRating = rating;
 
                 using var db = new AppDbContext();
-                var userMovie = db.UserMovies.FirstOrDefault(um => um.UserId == User.Id && um.MovieId == MovieId);
+                var userMovie = db.UserMovies.FirstOrDefault(um => um.UserId == User.UserId && um.MovieId == MovieId);
 
                 if (userMovie == null)
                 {
                     userMovie = new UserMovie
                     {
-                        UserId = User.Id,
+                        UserId = User.UserId,
                         MovieId = MovieId,
                         Rating = rating
                     };
@@ -126,6 +141,29 @@ namespace CinemaGuide.ViewModels
                 db.SaveChanges();
             }
         }
+
+        private void SaveUserRating()
+        {
+            using var db = new AppDbContext();
+            var userMovie = db.UserMovies.FirstOrDefault(um => um.UserId == User.UserId && um.MovieId == MovieId);
+
+            if (userMovie == null)
+            {
+                userMovie = new UserMovie
+                {
+                    UserId = User.UserId,
+                    MovieId = MovieId,
+                    Rating = (int)Math.Round(UserRating)
+                };
+                db.UserMovies.Add(userMovie);
+            }
+            else
+            {
+                userMovie.Rating = (int)Math.Round(UserRating);
+            }
+            db.SaveChanges();
+        }
+
 
         private void BackToCatalog(object parameter)
         {

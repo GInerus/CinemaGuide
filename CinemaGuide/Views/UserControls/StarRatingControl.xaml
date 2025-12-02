@@ -13,23 +13,22 @@
 
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
-                    <Grid Width="24" Height="24">
-
+                    <Grid Width="24" Height="24" MouseLeftButtonDown="Star_MouseLeftButtonDown">
                         <!-- Серое пустое -->
                         <Path Data="M12 17.27L18.18 21L16.54 13.97L22 9.24L14.81 8.63L12 2L9.19 8.63L2 9.24L7.45 13.97L5.82 21L12 17.27Z"
-                              Fill="#444"/>
+              Fill="#444"/>
 
                         <!-- Золотая часть -->
                         <Grid>
                             <Grid.Clip>
                                 <RectangleGeometry Rect="{Binding FillRect}"/>
                             </Grid.Clip>
-
                             <Path Data="M12 17.27L18.18 21L16.54 13.97L22 9.24L14.81 8.63L12 2L9.19 8.63L2 9.24L7.45 13.97L5.82 21L12 17.27Z"
-                                  Fill="#FFD700"/>
+                  Fill="#FFD700"/>
                         </Grid>
                     </Grid>
                 </DataTemplate>
+
             </ItemsControl.ItemTemplate>
         </ItemsControl>
     </StackPanel>
