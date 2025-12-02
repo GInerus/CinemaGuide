@@ -26,6 +26,11 @@ namespace CinemaGuide.ViewModels
         public int AgeRating { get; private set; }
         public double ImdbRating => MovieItem.Movie.ImdbRating ?? 0;
         public ObservableCollection<string> Genres { get; private set; } = new();
+        public UserMovieStatus CurrentStatus { get; set; }
+        public int? CurrentRating { get; set; }
+
+        public ICommand SetStatusCommand { get; }
+        public ICommand SetRatingCommand { get; }
 
         public ICommand BackCommand { get; }
 
@@ -36,6 +41,10 @@ namespace CinemaGuide.ViewModels
 
             // Команда возврата к каталогу фильмов
             BackCommand = new RelayCommand(BackToCatalog);
+            // Команда для установки статуса просмотра
+            SetStatusCommand = new RelayCommand(SetStatus);
+            // Команда для установки рейтинга фильма от пользователя
+            SetRatingCommand = new RelayCommand(SetRating);
 
             if (MovieItem.PosterImage == null)
                 MovieItem.LoadPoster(200);
@@ -51,6 +60,71 @@ namespace CinemaGuide.ViewModels
             AgeRating = MovieItem.Movie.AgeRating;
 
             LoadGenres(MovieItem.Movie.MovieId);
+            LoadUserMovieData();
+        }
+
+        private void LoadUserMovieData()
+        {
+            using var db = new AppDbContext();
+            var userMovie = db.UserMovies.FirstOrDefault(um => um.UserId == User.Id && um.MovieId == MovieId);
+            if (userMovie != null)
+            {
+                CurrentStatus = userMovie.Status;
+                CurrentRating = userMovie.Rating;
+            }
+        }
+
+        private void SetStatus(object statusObj)
+        {
+            if (statusObj is UserMovieStatus status)
+            {
+                CurrentStatus = status;
+
+                using var db = new AppDbContext();
+                var userMovie = db.UserMovies.FirstOrDefault(um => um.UserId == User.Id && um.MovieId == MovieId);
+                if (userMovie == null)
+                {
+                    userMovie = new UserMovie
+                    {
+                        UserId = User.Id,
+                        MovieId = MovieId,
+                        Status = status
+                    };
+                    db.UserMovies.Add(userMovie);
+                }
+                else
+                {
+                    userMovie.Status = status;
+                }
+                db.SaveChanges();
+            }
+        }
+
+        private void SetRating(object parameter)
+        {
+            if (parameter is int rating)
+            {
+                CurrentRating = rating;
+
+                using var db = new AppDbContext();
+                var userMovie = db.UserMovies.FirstOrDefault(um => um.UserId == User.Id && um.MovieId == MovieId);
+
+                if (userMovie == null)
+                {
+                    userMovie = new UserMovie
+                    {
+                        UserId = User.Id,
+                        MovieId = MovieId,
+                        Rating = rating
+                    };
+                    db.UserMovies.Add(userMovie);
+                }
+                else
+                {
+                    userMovie.Rating = rating;
+                }
+                db.SaveChanges();
+            }
         }
 
         private void BackToCatalog(object parameter)

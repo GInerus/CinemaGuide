@@ -9,6 +9,7 @@ namespace CinemaGuide.Data
         public DbSet<Movie> Movies { get; set; }
         public DbSet<Genre> Genres { get; set; }
         public DbSet<MovieGenre> MovieGenres { get; set; }
+        public DbSet<UserMovie> UserMovies { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder options)
         {
