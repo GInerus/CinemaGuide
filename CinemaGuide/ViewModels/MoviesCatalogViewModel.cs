@@ -89,6 +89,46 @@ namespace CinemaGuide.ViewModels
                 IsSearchVisible = false; // поиск прячем, если показаны фильтры
         });
 
+        private string _searchText;
+        public string SearchText
+        {
+            get => _searchText;
+            set
+            {
+                if (_searchText != value)
+                {
+                    _searchText = value;
+                    OnPropertyChanged();
+                    ApplySearch(); // обновляем список фильмов при вводе
+                }
+            }
+        }
+
+        // Хранит все фильмы без фильтра
+        private ObservableCollection<MovieItemViewModel> _allMovies = new();
+
+        private void ApplySearch()
+        {
+            if (string.IsNullOrWhiteSpace(SearchText))
+            {
+                // если поиск пустой — показываем все
+                Movies.Clear();
+                foreach (var m in _allMovies)
+                    Movies.Add(m);
+            }
+            else
+            {
+                var filtered = _allMovies
+                    .Where(m => m.Title.IndexOf(SearchText, StringComparison.OrdinalIgnoreCase) >= 0)
+                    .ToList();
+
+                Movies.Clear();
+                foreach (var m in filtered)
+                    Movies.Add(m);
+            }
+        }
+
+
         public MoviesCatalogViewModel()
         {
             LoadNextPageCommand = new AsyncCommand(LoadNextPageAsync);
@@ -148,7 +188,11 @@ namespace CinemaGuide.ViewModels
                 .ToList();
 
             foreach (var movie in page)
-                Movies.Add(new MovieItemViewModel(movie));
+            {
+                var vm = new MovieItemViewModel(movie);
+                Movies.Add(vm);
+                _allMovies.Add(vm); // вспомогательная коллекция
+            }
 
             CurrentStartIndex += PageSize;
 
