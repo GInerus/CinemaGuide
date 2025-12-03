@@ -2,19 +2,47 @@
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:vm="clr-namespace:CinemaGuide.ViewModels"
-             xmlns:svg="http://sharpvectors.codeplex.com/svgc/"
              xmlns:helpers="clr-namespace:CinemaGuide.Helpers"
+             xmlns:svg="http://sharpvectors.codeplex.com/svgc/"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
 
+    <UserControl.Resources>
+        <helpers:ColumnCountConverter x:Key="ColumnCountConverter" MinItemWidth="160"/>
+        <Style x:Key="StyleButton" TargetType="Button">
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border CornerRadius="10"
+                                Background="{TemplateBinding Background}"
+                                BorderBrush="White"
+                                BorderThickness="1"
+                                SnapsToDevicePixels="True">
+                            <ContentPresenter HorizontalAlignment="Center"
+                                              VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsEnabled" Value="False">
+                    <Setter Property="Background" Value="Gray"/>
+                    <Setter Property="Foreground" Value="LightGray"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+    </UserControl.Resources>
+
     <UserControl.DataContext>
-        <vm:RecommendationsViewModel/>
+        <vm:MoviesCatalogViewModel/>
     </UserControl.DataContext>
 
     <Grid>
-        <!-- Фон -->
         <Grid.Background>
             <LinearGradientBrush StartPoint="0.5,0" EndPoint="0.5,1">
                 <GradientStop Color="Blue" Offset="1.7"/>
@@ -35,44 +63,70 @@
                 <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
 
-            <!-- Кнопка назад -->
-            <Button Grid.Column="0" Width="70" Height="60"
-                    Command="{Binding BackCommand}" Cursor="Hand">
+            <Button Grid.Column="0"
+                    Width="70" Height="60"
+                    Command="{Binding BackCommand}"
+                    Style="{StaticResource StyleButton}"
+                    Background="White"
+                    Margin="0,0,10,0"
+                    Cursor="Hand">
                 <svg:SvgViewbox Source="Resource/arrowLeft.svg" Margin="6"/>
             </Button>
 
-            <!-- Вкладки -->
             <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
-                <Button Content="Каталог" Width="200" Height="50" 
-                        Command="{Binding SwitchTabCommand}" 
-                        CommandParameter="Catalog" />
-                <Button Content="Рекомендации" Width="200" Height="50"
-                        Command="{Binding SwitchTabCommand}" 
-                        CommandParameter="Recommendations" Margin="10,0,0,0"/>
+                <Button Content="Каталог" Margin="0,0,10,0"
+                        Command="{Binding SwitchTabCommand}"
+                        CommandParameter="Catalog"
+                        Width="200" Height="50"
+                        Padding="20,8"
+                        FontSize="22"
+                        Cursor="Hand"
+                        Background="Transparent"
+                        Foreground="White"/>
+                <Button Content="Рекомендации" Margin="10,0,0,0"
+                        Command="{Binding SwitchTabCommand}"
+                        CommandParameter="Recommendations"
+                        Width="200" Height="50"
+                        Padding="20,8"
+                        FontSize="22"
+                        Cursor="Hand"
+                        Background="White"
+                        Foreground="Black"/>
             </StackPanel>
 
-            <!-- Кнопка Профиля -->
-            <Button Grid.Column="2" Width="70" Height="60"
-                    Command="{Binding OpenProfileCommand}" Cursor="Hand">
+            <Button Grid.Column="2"
+                    Width="70" Height="60"
+                    Command="{Binding OpenProfileCommand}"
+                    Style="{StaticResource StyleButton}"
+                    Background="White"
+                    Margin="0,0,10,0"
+                    Cursor="Hand">
                 <svg:SvgViewbox Source="Resource/person.svg" Margin="6"/>
             </Button>
         </Grid>
 
         <!-- Каталог фильмов -->
-        <ScrollViewer Grid.Row="1" Margin="10,5,10,10" VerticalScrollBarVisibility="Auto"
+        <ScrollViewer Grid.Row="1"
+                      Margin="10,5,10,10"
+                      VerticalScrollBarVisibility="Auto"
+                      CanContentScroll="False"
                       helpers:ScrollLoadBehavior.LoadNextPageCommand="{Binding LoadNextPageCommand}">
-            <ItemsControl ItemsSource="{Binding Movies}" HorizontalContentAlignment="Stretch">
+            <ItemsControl ItemsSource="{Binding Movies}"
+                          HorizontalContentAlignment="Stretch">
                 <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>
-                        <UniformGrid Columns="{Binding RelativeSource={RelativeSource AncestorType=ScrollViewer},
-                                                        Path=ActualWidth,
-                                                        Converter={StaticResource ColumnCountConverter}}"/>
+                        <UniformGrid Columns="{Binding
+                        RelativeSource={RelativeSource AncestorType=ScrollViewer},
+                        Path=ActualWidth,
+                        Converter={StaticResource ColumnCountConverter}}"/>
                     </ItemsPanelTemplate>
                 </ItemsControl.ItemsPanel>
+
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
                         <Border Margin="5" Padding="10" Background="#000090" CornerRadius="8"
-                                helpers:PosterLoaderBehavior.EnableLazyLoad="True" Cursor="Hand">
+                                helpers:PosterLoaderBehavior.EnableLazyLoad="True"
+                                Cursor="Hand">
                             <Border.InputBindings>
                                 <MouseBinding MouseAction="LeftClick"
                                               Command="{Binding DataContext.OpenMovieCommand,
@@ -83,7 +137,8 @@
                             <Grid Width="Auto" Height="273">
                                 <Border CornerRadius="8" Height="225" VerticalAlignment="Top" ClipToBounds="True">
                                     <Border.Background>
-                                        <ImageBrush ImageSource="{Binding PosterImage}" Stretch="UniformToFill"/>
+                                        <ImageBrush ImageSource="{Binding PosterImage}"
+                                                    Stretch="UniformToFill"/>
                                     </Border.Background>
                                 </Border>
 
@@ -96,10 +151,16 @@
                                     </StackPanel>
                                 </Border>
 
-                                <TextBlock Text="{Binding Title}" Foreground="White" TextWrapping="Wrap"
-                                           TextTrimming="CharacterEllipsis" FontSize="16"
-                                           FontWeight="SemiBold" TextAlignment="Center"
-                                           Margin="0,230,0,0" VerticalAlignment="Center" MaxHeight="60"/>
+                                <TextBlock Text="{Binding Title}"
+                                           Foreground="White"
+                                           TextWrapping="Wrap"
+                                           TextTrimming="CharacterEllipsis"
+                                           FontSize="16"
+                                           FontWeight="SemiBold"
+                                           TextAlignment="Center"
+                                           Margin="0,230,0,0"
+                                           VerticalAlignment="Center"
+                                           MaxHeight="60"/>
                             </Grid>
                         </Border>
                     </DataTemplate>

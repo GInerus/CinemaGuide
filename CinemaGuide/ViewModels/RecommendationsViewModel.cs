@@ -1,12 +1,12 @@
 ﻿using CinemaGuide.Data;
 using CinemaGuide.Helpers;
 using CinemaGuide.Models;
+using CinemaGuide.Views.UserControls;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Input;
 
 namespace CinemaGuide.ViewModels
@@ -15,10 +15,14 @@ namespace CinemaGuide.ViewModels
     {
         public ObservableCollection<MovieItemViewModel> Movies { get; set; } = new();
 
+        private const int PageSize = 50;
+        private int CurrentStartIndex = 0;
+        private int TotalMovies;
+
         public ICommand LoadNextPageCommand { get; }
         public ICommand BackCommand { get; }
         public ICommand OpenProfileCommand { get; }
-        public ICommand SwitchTabCommand { get; }
+        public ICommand OpenMovieCommand { get; }
 
         private User _user;
         private int _userAge;
@@ -28,66 +32,107 @@ namespace CinemaGuide.ViewModels
             LoadNextPageCommand = new AsyncCommand(LoadNextPageAsync);
             BackCommand = new RelayCommand(BackToLast);
             OpenProfileCommand = new RelayCommand(OpenProfile);
-            SwitchTabCommand = new RelayCommand(tab =>
-            {
-                if (tab is string tabName)
-                    CurrentTab = tabName;
-            });
+            OpenMovieCommand = new RelayCommand(OpenMovie);
         }
 
         public void InitializeWithUser(User user)
         {
             _user = user ?? throw new ArgumentNullException(nameof(user));
             _userAge = CalculateUserAge(_user.BirthDate);
-            _ = LoadNextPageAsync();
+            _ = InitializeAsync();
         }
 
         private int CalculateUserAge(string birthDate)
         {
             if (DateTime.TryParse(birthDate, out var dob))
             {
-                int age = DateTime.Today.Year - dob.Year;
-                if (dob.Date > DateTime.Today.AddYears(-age)) age--;
+                var today = DateTime.Today;
+                int age = today.Year - dob.Year;
+                if (dob.Date > today.AddYears(-age)) age--;
                 return age;
             }
             return 0;
         }
 
-        private async Task LoadNextPageAsync()
+        private async Task InitializeAsync()
         {
             using var db = new AppDbContext();
-            var movies = db.Movies
-                           .Where(m => m.AgeRating <= _userAge)
-                           .OrderByDescending(m => m.KinopoiskRating)
-                           .Take(10)
-                           .ToList();
+            TotalMovies = db.Movies.Count(m => m.AgeRating <= _userAge);
+            await LoadNextPageAsync();
+        }
 
-            Movies.Clear();
-            foreach (var m in movies)
+        public async Task LoadNextPageAsync()
+        {
+            if (CurrentStartIndex >= TotalMovies)
+                return;
+
+            using var db = new AppDbContext();
+
+            var page = db.Movies
+                .Where(m => m.AgeRating <= _userAge)
+                .OrderBy(m => m.MovieId)
+                .Skip(CurrentStartIndex)
+                .Take(PageSize)
+                .ToList();
+
+            foreach (var movieEntity in page)
             {
-                var genres = db.MovieGenres
-                               .Where(mg => mg.MovieId == m.MovieId)
-                               .Select(mg => db.Genres.First(g => g.GenreId == mg.GenreId))
-                               .ToList();
+                var movieGenres = db.MovieGenres
+                                    .Where(mg => mg.MovieId == movieEntity.MovieId)
+                                    .Select(mg => db.Genres.First(g => g.GenreId == mg.GenreId))
+                                    .ToList();
 
-                Movies.Add(new MovieItemViewModel(m)
+                var vm = new MovieItemViewModel(movieEntity)
                 {
-                    Genres = new ObservableCollection<Genre>(genres)
-                });
+                    Genres = new ObservableCollection<Genre>(movieGenres)
+                };
+
+                Movies.Add(vm);
             }
 
-            await Task.Delay(5);
+            CurrentStartIndex += PageSize;
+
+            await Task.Delay(5); // для плавной загрузки
         }
 
-        private void BackToLast(object parameter) { /* То же, что в каталоге */ }
-        private void OpenProfile(object parameter) { /* То же, что в каталоге */ }
-
-        private string _currentTab;
-        public string CurrentTab
+        private void BackToLast(object parameter)
         {
-            get => _currentTab;
-            set { _currentTab = value; OnPropertyChanged(); }
+            foreach (var movie in Movies)
+                movie.UnloadPoster();
+
+            ((MainWindow)Application.Current.MainWindow).MainContent.Content =
+                new AuthUserControl();
+        }
+
+        private void OpenProfile(object parameter)
+        {
+            foreach (var movie in Movies)
+                movie.UnloadPoster();
+
+            ((MainWindow)Application.Current.MainWindow).MainContent.Content =
+                new UserProfileControl(_user);
+        }
+
+        public void OpenMovie(object parameter)
+        {
+            if (parameter is not int movieId)
+            {
+                MessageBox.Show("Ожидался MovieId (int)");
+                return;
+            }
+
+            using var db = new AppDbContext();
+            var movie = db.Movies.FirstOrDefault(m => m.MovieId == movieId);
+            if (movie == null)
+            {
+                MessageBox.Show("Фильм не найден");
+                return;
+            }
+
+            var moviePage = new MoviePageControl();
+            moviePage.DataContext = new MoviePageViewModel(new MovieItemViewModel(movie), _user);
+
+            ((MainWindow)Application.Current.MainWindow).MainContent.Content = moviePage;
         }
     }
-
 }
