@@ -6,23 +6,30 @@
              xmlns:svg="http://sharpvectors.codeplex.com/svgc/"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:conv="clr-namespace:CinemaGuide.Converters"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
 
     <UserControl.Resources>
         <helpers:ColumnCountConverter x:Key="ColumnCountConverter" MinItemWidth="160"/>
+        <conv:ActiveTabToBrushConverter x:Key="ActiveTabToBrushConverter"
+                                ActiveBrush="White"
+                                InactiveBrush="#55000000"/>
 
         <Style x:Key="StyleButton" TargetType="Button">
             <Setter Property="Background" Value="White"/>
             <Setter Property="BorderThickness" Value="0"/>
-            <Setter Property="Foreground" Value="Black"/>
+            <Setter Property="Foreground" Value="White"/>
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="Button">
                         <Border CornerRadius="10"
-                             Background="{TemplateBinding Background}">
+                    Background="{TemplateBinding Background}"
+                    BorderBrush="White"
+                    BorderThickness="1"
+                    SnapsToDevicePixels="True">
                             <ContentPresenter HorizontalAlignment="Center"
-                          VerticalAlignment="Center"/>
+                                  VerticalAlignment="Center"/>
                         </Border>
                     </ControlTemplate>
                 </Setter.Value>
@@ -34,6 +41,39 @@
                 </Trigger>
             </Style.Triggers>
         </Style>
+
+        <Style TargetType="Button" x:Key="TabButtonStyle">
+            <Setter Property="Height" Value="50"/>
+            <Setter Property="Width" Value="200"/>
+            <Setter Property="Padding" Value="20,8"/>
+            <Setter Property="FontSize" Value="22"/>
+            <Setter Property="Background" Value="#55000000"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="border" Background="{TemplateBinding Background}" 
+                        CornerRadius="8" BorderThickness="1" BorderBrush="White">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="border" Property="Background" Value="White"/>
+                                <Setter Property="Foreground" Value="Black"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="border" Property="Background" Value="DarkGray"/>
+                                <Setter Property="Foreground" Value="Black"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+
     </UserControl.Resources>
 
     <UserControl.DataContext>
@@ -67,7 +107,7 @@
                 <ColumnDefinition Width="Auto"/>
                 <!-- Назад -->
                 <ColumnDefinition Width="*"/>
-                <!-- Пустое место -->
+                <!-- Вкладки -->
                 <ColumnDefinition Width="Auto"/>
                 <!-- Мой профиль -->
             </Grid.ColumnDefinitions>
@@ -83,6 +123,32 @@
                     Cursor="Hand">
                 <svg:SvgViewbox Source="Resource/arrowLeft.svg" Margin="6"/>
             </Button>
+
+            <!-- Вкладки -->
+            <StackPanel Grid.Column="1" Orientation="Horizontal"
+                        HorizontalAlignment="Center" VerticalAlignment="Center" >
+
+                <Button Content="Каталог" Height="50" Width="200"
+                        Style="{StaticResource TabButtonStyle}"
+                        Background="{Binding CurrentTab, 
+                                    Converter={StaticResource ActiveTabToBrushConverter}, 
+                                    ConverterParameter=Catalog}"
+                        Command="{Binding SwitchTabCommand}"
+                        CommandParameter="Catalog"
+                        Margin="0,0,10,0"
+                        Cursor="Hand"/>
+
+                <Button Content="Рекомендации" Height="50" Width="200"
+                        Style="{DynamicResource TabButtonStyle}"
+                        Background="{Binding CurrentTab,
+                                    Converter={StaticResource ActiveTabToBrushConverter},
+                                    ConverterParameter=Recommendations}"
+                        Command="{Binding SwitchTabCommand}"
+                        CommandParameter="Recommendations"
+                        Margin="0,0,10,0"
+                        Cursor="Hand"/>
+            </StackPanel>
+
 
             <!-- Кнопка Профиля -->
             <Button Grid.Column="2"
