@@ -13,14 +13,14 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace CinemaGuide
+namespace CinemaGuide.Views.UserControls
 {
     /// <summary>
-    /// Логика взаимодействия для AuthPage.xaml
+    /// Логика взаимодействия для MoviePageControl.xaml
     /// </summary>
-    public partial class AuthPage : Page
+    public partial class MoviePageControl : UserControl
     {
-        public AuthPage()
+        public MoviePageControl()
         {
             InitializeComponent();
         }
