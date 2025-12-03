@@ -19,6 +19,7 @@ namespace CinemaGuide.ViewModels
     public class MoviesCatalogViewModel : BaseViewModel
     {
         public ObservableCollection<MovieItemViewModel> Movies { get; set; } = new();
+        public ObservableCollection<Genre> Genres { get; set; } = new();
 
         private const int PageSize = 50;
         private int CurrentStartIndex = 0;
@@ -128,6 +129,61 @@ namespace CinemaGuide.ViewModels
             }
         }
 
+        // Список всех жанров для панели фильтров
+        public ObservableCollection<Genre> AllGenres { get; set; } = new();
+
+        // Выбранные жанры
+        private ObservableCollection<Genre> _selectedGenres = new();
+        public ObservableCollection<Genre> SelectedGenres
+        {
+            get => _selectedGenres;
+            set
+            {
+                if (_selectedGenres != value)
+                {
+                    if (value != null)
+                    {
+                        _selectedGenres.Clear();
+                        foreach (var g in value)
+                            _selectedGenres.Add(g);
+                    }
+
+                    OnPropertyChanged();
+                    ApplyFilters();
+                }
+            }
+        }
+        public ICommand ToggleGenreCommand => new RelayCommand(param =>
+        {
+            if (param is Genre genre)
+            {
+                if (SelectedGenres.Contains(genre))
+                    SelectedGenres.Remove(genre);
+                else
+                    SelectedGenres.Add(genre);
+
+                ApplyFilters();
+            }
+        });
+
+        // Метод фильтрации по жанрам
+        private void ApplyFilters()
+        {
+            IEnumerable<MovieItemViewModel> filtered = _allMovies;
+
+            if (SelectedGenres.Any())
+            {
+                var selectedIds = SelectedGenres.Select(g => g.GenreId).ToList();
+                filtered = filtered.Where(m =>
+                    m.Genres.Any(g => selectedIds.Contains(g.GenreId))
+                );
+            }
+
+            Movies.Clear();
+            foreach (var m in filtered)
+                Movies.Add(m);
+        }
+
 
         public MoviesCatalogViewModel()
         {
@@ -170,9 +226,15 @@ namespace CinemaGuide.ViewModels
         private async Task InitializeAsync()
         {
             using var db = new AppDbContext();
+
             TotalMovies = db.Movies.Count(m => m.AgeRating <= _userAge);
             await LoadNextPageAsync();
+
+            AllGenres.Clear();
+            foreach (var genre in db.Genres.ToList())
+                AllGenres.Add(genre);
         }
+
 
         public async Task LoadNextPageAsync()
         {
@@ -180,6 +242,7 @@ namespace CinemaGuide.ViewModels
                 return;
 
             using var db = new AppDbContext();
+
             var page = db.Movies
                 .Where(m => m.AgeRating <= _userAge)
                 .OrderBy(m => m.MovieId)
@@ -187,9 +250,19 @@ namespace CinemaGuide.ViewModels
                 .Take(PageSize)
                 .ToList();
 
-            foreach (var movie in page)
+            foreach (var movieEntity in page) // переименовали переменную
             {
-                var vm = new MovieItemViewModel(movie);
+                // Получаем жанры для фильма
+                var movieGenres = db.MovieGenres
+                                    .Where(mg => mg.MovieId == movieEntity.MovieId)
+                                    .Select(mg => db.Genres.First(g => g.GenreId == mg.GenreId))
+                                    .ToList();
+
+                var vm = new MovieItemViewModel(movieEntity)
+                {
+                    Genres = new ObservableCollection<Genre>(movieGenres)
+                };
+
                 Movies.Add(vm);
                 _allMovies.Add(vm); // вспомогательная коллекция
             }
@@ -198,6 +271,7 @@ namespace CinemaGuide.ViewModels
 
             await Task.Delay(5);
         }
+
 
         private void BackToLast(object parameter)
         {

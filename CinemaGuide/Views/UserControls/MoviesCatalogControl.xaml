@@ -16,6 +16,8 @@
         <!-- Встроенный конвертер для bool → Visibility -->
         <BooleanToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
         <conv:StringNullOrEmptyToVisibilityConverter x:Key="StringNullOrEmptyToVisibilityConverter"/>
+        <conv:GenreSelectedConverter x:Key="GenreSelectedConverter"/>
+        <conv:GenreInCollectionMultiConverter x:Key="GenreInCollectionMultiConverter"/>
 
 
         <Style x:Key="StyleButton" TargetType="Button">
@@ -320,11 +322,37 @@
 
             <!-- Панель фильтров справа -->
             <Border Width="300" Background="#CC111111" Margin="0,0,0,80"
-                    VerticalAlignment="Stretch" HorizontalAlignment="Right"
-                    Visibility="{Binding IsFiltersVisible, 
-                                Converter={StaticResource 
-                                BoolToVisibilityConverter}}">
-                <!-- Здесь размести свои фильтры -->
+        VerticalAlignment="Stretch" HorizontalAlignment="Right"
+        Visibility="{Binding IsFiltersVisible, Converter={StaticResource BoolToVisibilityConverter}}">
+
+                <StackPanel Margin="10">
+                    <TextBlock Text="Фильтры" 
+                   Foreground="White" 
+                   FontSize="18" 
+                   FontWeight="Bold" 
+                   Margin="0,0,0,10"/>
+
+                    <!-- Жанры -->
+                    <TextBlock Text="Жанры:" Foreground="White" FontWeight="SemiBold" Margin="0,0,0,5"/>
+
+                    <ScrollViewer Height="200" VerticalScrollBarVisibility="Auto">
+                        <ItemsControl ItemsSource="{Binding AllGenres}">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <CheckBox Content="{Binding Name}" Foreground="White"
+                          Tag="{Binding}"
+                          IsChecked="{Binding DataContext.SelectedGenres, 
+                                      RelativeSource={RelativeSource AncestorType=UserControl}, 
+                                      Converter={StaticResource GenreSelectedConverter}, Mode=OneWay}"
+                          Command="{Binding DataContext.ToggleGenreCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                          CommandParameter="{Binding}" />
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </ScrollViewer>
+
+                    <!-- Можно добавить другие фильтры, например по рейтингу или возрасту -->
+                </StackPanel>
             </Border>
         </Grid>
     </Grid>

@@ -5,6 +5,8 @@ using System.IO;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media.Imaging;
+using System.Collections.ObjectModel;
+
 
 namespace CinemaGuide.ViewModels
 {
@@ -66,5 +68,8 @@ namespace CinemaGuide.ViewModels
         {
             PosterImage = null;
         }
+
+        public ObservableCollection<Genre> Genres { get; set; } = new();
+
     }
 }
