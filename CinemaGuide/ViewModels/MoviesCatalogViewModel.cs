@@ -28,10 +28,24 @@ namespace CinemaGuide.ViewModels
         public ICommand BackCommand { get; }
         public ICommand OpenProfileCommand {get; }
         public ICommand OpenMovieCommand { get; }
+        public ICommand SwitchTabCommand { get; }  // команда для переключения вкладок
 
         private User _user;
         private int _userAge;
 
+        private string _currentTab;
+        public string CurrentTab
+        {
+            get => _currentTab;
+            set
+            {
+                if (_currentTab != value)
+                {
+                    _currentTab = value;
+                    OnPropertyChanged(nameof(CurrentTab));
+                }
+            }
+        }
 
         public MoviesCatalogViewModel()
         {
@@ -39,6 +53,17 @@ namespace CinemaGuide.ViewModels
             BackCommand = new RelayCommand(BackToLast);
             OpenProfileCommand = new RelayCommand(OpenProfile);
             OpenMovieCommand = new RelayCommand(OpenMovie);
+
+
+            // Команда переключения вкладок
+            SwitchTabCommand = new RelayCommand(tab =>
+            {
+                if (tab is string tabName)
+                    CurrentTab = tabName;
+            });
+
+            // Устанавливаем вкладку "Каталог" активной по умолчанию
+            CurrentTab = "Catalog";
         }
 
         public void InitializeWithUser(User user)
