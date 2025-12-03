@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CinemaGuide.ViewModels;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -23,6 +24,20 @@ namespace CinemaGuide.Views.UserControls
         public CreateAccountControl()
         {
             InitializeComponent();
+            DataContext = new CreateAccountViewModel();
+        }
+
+        private void PasswordBox_PasswordChanged(object sender, RoutedEventArgs e)
+        {
+            if (DataContext is CreateAccountViewModel vm)
+                vm.Password = ((PasswordBox)sender).Password;
+        }
+
+        private void ConfirmPasswordBox_PasswordChanged(object sender, RoutedEventArgs e)
+        {
+            if (DataContext is CreateAccountViewModel vm)
+                vm.ConfirmPassword = ((PasswordBox)sender).Password;
         }
     }
+
 }
