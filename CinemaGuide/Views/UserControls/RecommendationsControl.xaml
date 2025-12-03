@@ -74,24 +74,85 @@
             </Button>
 
             <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+
+                <!-- Кнопка Каталог (белый фон, черный текст) -->
                 <Button Content="Каталог" Margin="0,0,10,0"
-                        Command="{Binding SwitchTabCommand}"
-                        CommandParameter="Catalog"
-                        Width="200" Height="50"
-                        Padding="20,8"
-                        FontSize="22"
-                        Cursor="Hand"
-                        Background="Transparent"
-                        Foreground="White"/>
+            Command="{Binding SwitchTabCommand}"
+            CommandParameter="Catalog"
+            Width="200" Height="50"
+            Padding="20,8"
+            FontSize="22"
+            Cursor="Hand"
+            Background="Transparent"
+            Foreground="White">
+                    <Button.Style>
+                        <Style TargetType="Button">
+                            <Setter Property="Background" Value="White"/>
+                            <Setter Property="Foreground" Value="Black"/>
+                            <Setter Property="BorderBrush" Value="White"/>
+                            <Setter Property="BorderThickness" Value="1"/>
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="Button">
+                                        <Border Background="{TemplateBinding Background}" 
+                        BorderBrush="{TemplateBinding BorderBrush}" 
+                        BorderThickness="{TemplateBinding BorderThickness}" 
+                        CornerRadius="8">
+                                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                        </Border>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                            <Style.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="Background" Value="Gray"/>
+                                    <Setter Property="Foreground" Value="White"/>
+                                </Trigger>
+                                <Trigger Property="IsPressed" Value="True">
+                                    <Setter Property="Background" Value="DarkGray"/>
+                                    <Setter Property="Foreground" Value="White"/>
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Button.Style>
+                </Button>
+
+                <!-- Кнопка Рекомендации (прозрачный фон, белый текст) -->
                 <Button Content="Рекомендации" Margin="10,0,0,0"
-                        Command="{Binding SwitchTabCommand}"
-                        CommandParameter="Recommendations"
-                        Width="200" Height="50"
-                        Padding="20,8"
-                        FontSize="22"
-                        Cursor="Hand"
-                        Background="White"
-                        Foreground="Black"/>
+            Command="{Binding SwitchTabCommand}"
+            CommandParameter="Recommendations"
+            Width="200" Height="50"
+            Padding="20,8"
+            FontSize="22"
+            Cursor="Hand"
+            Background="White"
+            Foreground="Black">
+                    <Button.Style>
+                        <Style TargetType="Button">
+                            <Setter Property="Foreground" Value="White"/>
+                            <Setter Property="Background" Value="Transparent"/>
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="Button">
+                                        <Border x:Name="border"
+                                    Background="{TemplateBinding Background}"
+                                    BorderBrush="White"
+                                    BorderThickness="1"
+                                    CornerRadius="8">
+                                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                        </Border>
+                                        <ControlTemplate.Triggers>
+                                            <Trigger Property="IsMouseOver" Value="True">
+                                                <Setter TargetName="border" Property="Background" Value="Gray"/>
+                                                <Setter TargetName="border" Property="BorderBrush" Value="Black"/>
+                                            </Trigger>
+                                        </ControlTemplate.Triggers>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+                    </Button.Style>
+                </Button>
             </StackPanel>
 
             <Button Grid.Column="2"

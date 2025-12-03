@@ -23,6 +23,8 @@ namespace CinemaGuide.ViewModels
         public ICommand BackCommand { get; }
         public ICommand OpenProfileCommand { get; }
         public ICommand OpenMovieCommand { get; }
+        public ICommand SwitchTabCommand { get; }  // Для возврата в каталог
+
 
         private User _user;
         private int _userAge;
@@ -33,6 +35,8 @@ namespace CinemaGuide.ViewModels
             BackCommand = new RelayCommand(BackToLast);
             OpenProfileCommand = new RelayCommand(OpenProfile);
             OpenMovieCommand = new RelayCommand(OpenMovie);
+            // Команда для возврата в каталог
+            SwitchTabCommand = new RelayCommand(_ => OpenCatalog());
         }
 
         public void InitializeWithUser(User user)
@@ -40,6 +44,7 @@ namespace CinemaGuide.ViewModels
             _user = user ?? throw new ArgumentNullException(nameof(user));
             _userAge = CalculateUserAge(_user.BirthDate);
             _ = InitializeAsync();
+            // Здесь можно инициализировать рекомендации по пользователю
         }
 
         private int CalculateUserAge(string birthDate)
@@ -97,18 +102,12 @@ namespace CinemaGuide.ViewModels
 
         private void BackToLast(object parameter)
         {
-            foreach (var movie in Movies)
-                movie.UnloadPoster();
-
             ((MainWindow)Application.Current.MainWindow).MainContent.Content =
                 new AuthUserControl();
         }
 
         private void OpenProfile(object parameter)
         {
-            foreach (var movie in Movies)
-                movie.UnloadPoster();
-
             ((MainWindow)Application.Current.MainWindow).MainContent.Content =
                 new UserProfileControl(_user);
         }
@@ -133,6 +132,20 @@ namespace CinemaGuide.ViewModels
             moviePage.DataContext = new MoviePageViewModel(new MovieItemViewModel(movie), _user);
 
             ((MainWindow)Application.Current.MainWindow).MainContent.Content = moviePage;
+        }
+
+        private void OpenCatalog()
+        {
+            // Создаём UserControl каталога
+            var catalogControl = new MoviesCatalogControl();
+
+            // Инициализируем ViewModel с текущим пользователем
+            var vm = new MoviesCatalogViewModel();
+            vm.InitializeWithUser(_user);
+            catalogControl.DataContext = vm;
+
+            // Меняем содержимое MainContent
+            ((MainWindow)Application.Current.MainWindow).MainContent.Content = catalogControl;
         }
     }
 }

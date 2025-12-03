@@ -194,11 +194,8 @@ namespace CinemaGuide.ViewModels
 
 
             // Команда переключения вкладок
-            SwitchTabCommand = new RelayCommand(tab =>
-            {
-                if (tab is string tabName)
-                    CurrentTab = tabName;
-            });
+            SwitchTabCommand = new RelayCommand(_ => OpenRecommendations());
+
 
             // Устанавливаем вкладку "Каталог" активной по умолчанию
             CurrentTab = "Catalog";
@@ -311,5 +308,23 @@ namespace CinemaGuide.ViewModels
 
             ((MainWindow)Application.Current.MainWindow).MainContent.Content = moviePage;
         }
+
+        private void OpenRecommendations()
+        {
+            foreach (var movie in Movies)
+                movie.UnloadPoster();
+
+            // Создаём новый UserControl для рекомендаций
+            var recommendationsControl = new RecommendationsControl();
+
+            // Устанавливаем DataContext с передачей текущего пользователя
+            var vm = new RecommendationsViewModel();
+            vm.InitializeWithUser(_user); // передаём пользователя
+            recommendationsControl.DataContext = vm;
+
+            // Меняем содержимое MainContent
+            ((MainWindow)Application.Current.MainWindow).MainContent.Content = recommendationsControl;
+        }
+
     }
 }
