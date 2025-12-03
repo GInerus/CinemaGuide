@@ -15,11 +15,8 @@ namespace CinemaGuide.ViewModels
     {
         public ObservableCollection<MovieItemViewModel> Movies { get; set; } = new();
 
-        private const int PageSize = 50;
-        private int CurrentStartIndex = 0;
         private int TotalMovies;
 
-        public ICommand LoadNextPageCommand { get; }
         public ICommand BackCommand { get; }
         public ICommand OpenProfileCommand { get; }
         public ICommand OpenMovieCommand { get; }
@@ -31,7 +28,6 @@ namespace CinemaGuide.ViewModels
 
         public RecommendationsViewModel()
         {
-            LoadNextPageCommand = new AsyncCommand(LoadNextPageAsync);
             BackCommand = new RelayCommand(BackToLast);
             OpenProfileCommand = new RelayCommand(OpenProfile);
             OpenMovieCommand = new RelayCommand(OpenMovie);
@@ -43,8 +39,7 @@ namespace CinemaGuide.ViewModels
         {
             _user = user ?? throw new ArgumentNullException(nameof(user));
             _userAge = CalculateUserAge(_user.BirthDate);
-            _ = InitializeAsync();
-            // Здесь можно инициализировать рекомендации по пользователю
+            LoadRecommendations(); // сразу загружаем рекомендации
         }
 
         private int CalculateUserAge(string birthDate)
@@ -59,45 +54,54 @@ namespace CinemaGuide.ViewModels
             return 0;
         }
 
-        private async Task InitializeAsync()
+        private void LoadRecommendations()
         {
-            using var db = new AppDbContext();
-            TotalMovies = db.Movies.Count(m => m.AgeRating <= _userAge);
-            await LoadNextPageAsync();
-        }
-
-        public async Task LoadNextPageAsync()
-        {
-            if (CurrentStartIndex >= TotalMovies)
-                return;
+            Movies.Clear();
 
             using var db = new AppDbContext();
 
-            var page = db.Movies
-                .Where(m => m.AgeRating <= _userAge)
-                .OrderBy(m => m.MovieId)
-                .Skip(CurrentStartIndex)
-                .Take(PageSize)
+            // 1. Топ-5 просмотренных и оцененных фильмов
+            var watchedRated = db.UserMovies
+                .Where(um => um.UserId == _user.UserId && um.Status == UserMovieStatus.Watched && um.Rating.HasValue)
+                .OrderByDescending(um => um.Rating)
+                .Take(5)
                 .ToList();
 
-            foreach (var movieEntity in page)
+            if (!watchedRated.Any())
+                return; // если нет оцененных фильмов, ничего не показываем
+
+            // 2. Собираем жанры
+            var preferredGenreIds = watchedRated
+                .SelectMany(um => db.MovieGenres
+                    .Where(mg => mg.MovieId == um.MovieId)
+                    .Select(mg => mg.GenreId))
+                .Distinct()
+                .ToList();
+
+            var alreadyWatchedIds = watchedRated.Select(um => um.MovieId).ToList();
+
+            // 3. Находим фильмы с этими жанрами и сортируем по рейтингу
+            var recommendedMovies = db.Movies
+                .Where(m => m.AgeRating <= _userAge &&
+                            !alreadyWatchedIds.Contains(m.MovieId) &&
+                            db.MovieGenres.Any(mg => mg.MovieId == m.MovieId && preferredGenreIds.Contains(mg.GenreId)))
+                .OrderByDescending(m => m.KinopoiskRating)
+                .Take(15)
+                .ToList();
+
+            foreach (var movie in recommendedMovies)
             {
                 var movieGenres = db.MovieGenres
-                                    .Where(mg => mg.MovieId == movieEntity.MovieId)
+                                    .Where(mg => mg.MovieId == movie.MovieId)
                                     .Select(mg => db.Genres.First(g => g.GenreId == mg.GenreId))
                                     .ToList();
 
-                var vm = new MovieItemViewModel(movieEntity)
+                var vm = new MovieItemViewModel(movie)
                 {
                     Genres = new ObservableCollection<Genre>(movieGenres)
                 };
-
                 Movies.Add(vm);
             }
-
-            CurrentStartIndex += PageSize;
-
-            await Task.Delay(5); // для плавной загрузки
         }
 
         private void BackToLast(object parameter)
