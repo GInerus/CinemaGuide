@@ -109,11 +109,13 @@
                     <PasswordBox x:Name="PasswordBox" Width="300" FontSize="18"
                                  Style="{DynamicResource RoundedPasswordBoxStyle}"
                                  helpers:PasswordBoxHelper.Watermark="Пароль"
-                                 helpers:PasswordBoxHelper.BindPassword="True"/>
+                                 PasswordChanged="PasswordBox_PasswordChanged"/>
+
                     <PasswordBox x:Name="ConfirmPasswordBox" Width="300" FontSize="18"
                                  Style="{DynamicResource RoundedPasswordBoxStyle}"
                                  helpers:PasswordBoxHelper.Watermark="Повторите пароль"
-                                 helpers:PasswordBoxHelper.BindPassword="True"/>
+                                 PasswordChanged="ConfirmPasswordBox_PasswordChanged"/>
+
                     <DatePicker SelectedDate="{Binding BirthDate}" Margin="0,5"/>
                     <Button Content="Выбрать аватар" Command="{Binding ChooseAvatarCommand}" Style="{StaticResource StyleButton}" Margin="0,5"/>
                     <Button Content="Зарегистрироваться" Command="{Binding RegisterCommand}" Style="{StaticResource StyleButton}" Margin="0,10"/>

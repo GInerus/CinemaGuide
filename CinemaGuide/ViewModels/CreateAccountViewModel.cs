@@ -98,7 +98,7 @@ namespace CinemaGuide.ViewModels
         {
             var dlg = new Microsoft.Win32.OpenFileDialog { Filter = "Images|*.png;*.jpg;*.jpeg" };
             if (dlg.ShowDialog() == true)
-                AvatarPath = dlg.FileName;
+                AvatarPath = System.IO.Path.GetFileName(dlg.FileName);
         }
 
         private void Register(object parameter)
