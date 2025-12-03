@@ -46,6 +46,48 @@ namespace CinemaGuide.ViewModels
                 }
             }
         }
+        private bool _isSearchVisible;
+        public bool IsSearchVisible
+        {
+            get => _isSearchVisible;
+            set
+            {
+                if (_isSearchVisible != value)
+                {
+                    _isSearchVisible = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+
+        private bool _isFiltersVisible;
+        public bool IsFiltersVisible
+        {
+            get => _isFiltersVisible;
+            set
+            {
+                if (_isFiltersVisible != value)
+                {
+                    _isFiltersVisible = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+
+        // Команды для кнопок поиска и фильтров
+        public ICommand ToggleSearchCommand => new RelayCommand(_ =>
+        {
+            IsSearchVisible = !IsSearchVisible;
+            if (IsSearchVisible)
+                IsFiltersVisible = false; // фильтры прячем, если показан поиск
+        });
+
+        public ICommand ToggleFiltersCommand => new RelayCommand(_ =>
+        {
+            IsFiltersVisible = !IsFiltersVisible;
+            if (IsFiltersVisible)
+                IsSearchVisible = false; // поиск прячем, если показаны фильтры
+        });
 
         public MoviesCatalogViewModel()
         {
@@ -151,8 +193,5 @@ namespace CinemaGuide.ViewModels
 
             ((MainWindow)Application.Current.MainWindow).MainContent.Content = moviePage;
         }
-
-
-
     }
 }

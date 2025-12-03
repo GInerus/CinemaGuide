@@ -4,6 +4,7 @@
              xmlns:vm="clr-namespace:CinemaGuide.ViewModels"
              xmlns:helpers="clr-namespace:CinemaGuide.Helpers"
              xmlns:svg="http://sharpvectors.codeplex.com/svgc/"
+             xmlns:sys="clr-namespace:System;assembly=mscorlib"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:conv="clr-namespace:CinemaGuide.Converters"
@@ -12,6 +13,10 @@
 
     <UserControl.Resources>
         <helpers:ColumnCountConverter x:Key="ColumnCountConverter" MinItemWidth="160"/>
+        <!-- Встроенный конвертер для bool → Visibility -->
+        <BooleanToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
+        <conv:StringNullOrEmptyToVisibilityConverter x:Key="StringNullOrEmptyToVisibilityConverter"/>
+
 
         <Style x:Key="StyleButton" TargetType="Button">
             <Setter Property="Background" Value="White"/>
@@ -144,7 +149,7 @@
                         Cursor="Hand"
                         Background="Transparent"
                         Foreground="White">
-                     <Button.Style>
+                    <Button.Style>
                         <Style TargetType="Button">
                             <Setter Property="Foreground" Value="White"/>
                             <Setter Property="Background" Value="Transparent"/>
@@ -194,20 +199,20 @@
         <!--■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■-->
 
         <ScrollViewer Grid.Row="1"
-                      Margin="10,5,10,10"
-                      VerticalScrollBarVisibility="Auto"
-                      CanContentScroll="False"
-                      helpers:ScrollLoadBehavior.LoadNextPageCommand="{Binding LoadNextPageCommand}">
+              Margin="10,5,10,10"
+              VerticalScrollBarVisibility="Auto"
+              CanContentScroll="False"
+              helpers:ScrollLoadBehavior.LoadNextPageCommand="{Binding LoadNextPageCommand}">
 
             <ItemsControl ItemsSource="{Binding Movies}"
-                          HorizontalContentAlignment="Stretch">
+                  HorizontalContentAlignment="Stretch">
 
                 <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>
                         <UniformGrid Columns="{Binding
-                                RelativeSource={RelativeSource AncestorType=ScrollViewer},
-                                Path=ActualWidth,
-                                Converter={StaticResource ColumnCountConverter}}"/>
+                        RelativeSource={RelativeSource AncestorType=ScrollViewer},
+                        Path=ActualWidth,
+                        Converter={StaticResource ColumnCountConverter}}"/>
                     </ItemsPanelTemplate>
                 </ItemsControl.ItemsPanel>
 
@@ -216,30 +221,30 @@
                     <DataTemplate>
 
                         <Border Margin="5" Padding="10" Background="#000090" CornerRadius="8"
-        helpers:PosterLoaderBehavior.EnableLazyLoad="True"
-        Cursor="Hand">
+                        helpers:PosterLoaderBehavior.EnableLazyLoad="True"
+                        Cursor="Hand">
 
                             <Border.InputBindings>
                                 <MouseBinding MouseAction="LeftClick"
-                                  Command="{Binding DataContext.OpenMovieCommand,
-                                                    RelativeSource={RelativeSource AncestorType=ItemsControl}}"
-                                  CommandParameter="{Binding MovieId}"/>
+                                      Command="{Binding DataContext.OpenMovieCommand,
+                                      RelativeSource={RelativeSource AncestorType=ItemsControl}}"
+                                      CommandParameter="{Binding MovieId}"/>
                             </Border.InputBindings>
 
                             <Grid Width="Auto" Height="273">
                                 <!-- Постер -->
                                 <Border CornerRadius="8" Height="225"
-                VerticalAlignment="Top" ClipToBounds="True">
+                                VerticalAlignment="Top" ClipToBounds="True">
                                     <Border.Background>
                                         <ImageBrush ImageSource="{Binding PosterImage}"
-                            Stretch="UniformToFill"/>
+                                            Stretch="UniformToFill"/>
                                     </Border.Background>
                                 </Border>
 
                                 <!-- Рейтинг -->
                                 <Border HorizontalAlignment="Right" VerticalAlignment="Top"
-                Background="#AA000000" CornerRadius="5"
-                Margin="5" Padding="3">
+        Background="#AA000000" CornerRadius="5"
+        Margin="5" Padding="3">
                                     <StackPanel Orientation="Horizontal">
                                         <TextBlock Text="★" Foreground="Gold" FontSize="14" Margin="0,0,2,0"/>
                                         <TextBlock Text="{Binding KinopoiskRating}" Foreground="White" FontSize="14"/>
@@ -248,24 +253,80 @@
 
                                 <!-- Название -->
                                 <TextBlock Text="{Binding Title}"
-                                   Foreground="White"
-                                   TextWrapping="Wrap"
-                                   TextTrimming="CharacterEllipsis"
-                                   FontSize="16"
-                                   FontWeight="SemiBold"
-                                   TextAlignment="Center"
-                                   Margin="0,230,0,0"
-                                   VerticalAlignment="Center"
-                                   MaxHeight="60"/>
+                           Foreground="White"
+                           TextWrapping="Wrap"
+                           TextTrimming="CharacterEllipsis"
+                           FontSize="16"
+                           FontWeight="SemiBold"
+                           TextAlignment="Center"
+                           Margin="0,230,0,0"
+                           VerticalAlignment="Center"
+                           MaxHeight="60"/>
                             </Grid>
-
                         </Border>
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
-
             </ItemsControl>
         </ScrollViewer>
 
+        <!-- Элементы поверх каталога -->
+        <Grid Grid.Row="1" Panel.ZIndex="10">
+            <!-- Элипс с кнопками поверх каталога -->
+            <Grid HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="20" Panel.ZIndex="10">
+                <Border Width="100" Height="50" Background="White" CornerRadius="10">
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+                        <!-- Кнопка Поиск -->
+                        <Button Width="35" Height="35" 
+                                Command="{Binding ToggleSearchCommand}" 
+                                Background="Transparent" 
+                                BorderThickness="0" 
+                                Margin="0,0,5,0"
+                                Cursor="Hand">
+                            <svg:SvgViewbox Source="Resource/magnifier.svg"/>
+                        </Button>
+
+                        <!-- Кнопка Фильтры -->
+                        <Button Width="35" Height="35" 
+                                Command="{Binding ToggleFiltersCommand}" 
+                                Background="Transparent" 
+                                BorderThickness="0"
+                                Margin="5,0,0,0"
+                                Cursor="Hand">
+                            <svg:SvgViewbox Source="Resource/filters.svg"/>
+                        </Button>
+                    </StackPanel>
+                </Border>
+            </Grid>
+
+            <!-- Поле поиска снизу -->
+            <Grid Margin="20,20,130,20" VerticalAlignment="Bottom" Height="40"
+      Visibility="{Binding IsSearchVisible, Converter={StaticResource BoolToVisibilityConverter}}">
+                <TextBox x:Name="SearchBox"
+             Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}"
+             Background="White"
+             Foreground="Black"
+             Padding="5"
+             VerticalContentAlignment="Center"/>
+                <TextBlock Text="Поиск фильма..."
+                           Foreground="Gray"
+                           Margin="8,0,0,0"
+                           VerticalAlignment="Center"
+                           IsHitTestVisible="False"
+                           Visibility="{Binding Text, 
+                                        ElementName=SearchBox, 
+                                        Converter={StaticResource 
+                                        StringNullOrEmptyToVisibilityConverter}}"/>
+            </Grid>
+
+            <!-- Панель фильтров справа -->
+            <Border Width="300" Background="#CC111111" Margin="0,0,0,80"
+                    VerticalAlignment="Stretch" HorizontalAlignment="Right"
+                    Visibility="{Binding IsFiltersVisible, 
+                                Converter={StaticResource 
+                                BoolToVisibilityConverter}}">
+                <!-- Здесь размести свои фильтры -->
+            </Border>
+        </Grid>
     </Grid>
 
 </UserControl>
